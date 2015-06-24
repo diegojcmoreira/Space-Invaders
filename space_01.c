@@ -20,7 +20,7 @@ int main(int argc, char **argv){
 
     }
     
-   al_rest(5);
+    inicio(&jogo);
    
    finaliza_jogo( &jogo );
    

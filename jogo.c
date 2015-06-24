@@ -7,7 +7,6 @@
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_image.h>
-#include <stdbool.h>
 
 #include "jogo.h"
 
@@ -21,7 +20,20 @@ void inicializa_jogo( Jogo* jogo, int largura, int altura ) {
      fprintf(stderr, "Falha ao inicializar add-on de primitivas.\n");
      exit(-1);
    }
-   
+
+   if (!al_install_keyboard())
+   {
+     fprintf(stderr, "Falha ao inicializar o teclado.\n");
+     exit(-1);
+   }
+
+   al_init_font_addon();
+   if (!al_init_ttf_addon())
+   {
+    fprintf(stderr, "Falha ao inicializar add-on allegro_ttf.\n");
+    exit(-1);
+   }
+  
    if (!al_init_image_addon()) {
      fprintf(stderr, "Falha ao inicializar add-on de imagens.\n");
      exit(-1);
@@ -53,8 +65,10 @@ void inicializa_jogo( Jogo* jogo, int largura, int altura ) {
    inicializa_tanque( &jogo->tanque, jogo->largura/2, 475 );
 }
 
-void inicio(Jogo* jogo) {
-   inicializa_jogo(jogo)
+void inicio(Jogo* jogo) 
+{
+   int tecla = 0;
+
    ALLEGRO_EVENT_QUEUE *fila_eventos = NULL;
    fila_eventos = al_create_event_queue();
    if (!fila_eventos)
@@ -70,25 +84,82 @@ void inicio(Jogo* jogo) {
         ALLEGRO_EVENT evento;
         ALLEGRO_TIMEOUT timeout;
         al_init_timeout(&timeout, 0.05);
+        al_register_event_source(fila_eventos, al_get_keyboard_event_source());
+        al_register_event_source(fila_eventos, al_get_display_event_source(jogo->display));
+ 
  
         int tem_eventos = al_wait_for_event_until(fila_eventos, &evento, &timeout);
 
-        switch (evento)
+        if (evento.type == ALLEGRO_EVENT_KEY_DOWN)
+            {
+                switch(evento.keyboard.keycode)
+                {
+                case ALLEGRO_KEY_UP:
+                    tecla = 1;
+                    break;
+                case ALLEGRO_KEY_DOWN:
+                    tecla = 2;
+                    break;
+                case ALLEGRO_KEY_LEFT:
+                    tecla = 3;
+                    break;
+                case ALLEGRO_KEY_RIGHT:
+                    tecla = 4;
+                    break;
+                }
+            }
+            else if (evento.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
+                 {
+                    finaliza_jogo(jogo);
+                    exit(0);
+                 }
+
+       /* if (tecla)
         {
-          case tem_eventos && evento.type == ALLEGRO_EVENT_DISPLAY_CLOSE;
-            finaliza_jogo(jogo)
-            exit(0)
-        }
+            al_draw_bitmap(fundo, 0, 0, 0);
+ 
+            switch (tecla)
+            {
+            case 1:
+                al_draw_text(fonte, al_map_rgb(255, 255, 255), LARGURA_TELA / 2,
+                        ALTURA_TELA / 2 - al_get_font_ascent(fonte) / 2,
+                        ALLEGRO_ALIGN_CENTRE, "Seta para cima");
+                break;
+            case 2:
+                al_draw_text(fonte, al_map_rgb(255, 255, 255), LARGURA_TELA / 2,
+                        ALTURA_TELA / 2 - al_get_font_ascent(fonte) / 2,
+                        ALLEGRO_ALIGN_CENTRE, "Seta para baixo");
+                break;
+            case 3:
+                al_draw_text(fonte, al_map_rgb(255, 255, 255), LARGURA_TELA / 2,
+                        ALTURA_TELA / 2 - al_get_font_ascent(fonte) / 2,
+                        ALLEGRO_ALIGN_CENTRE, "Seta esquerda");
+                break;
+            case 4:
+                al_draw_text(fonte, al_map_rgb(255, 255, 255), LARGURA_TELA / 2,
+                        ALTURA_TELA / 2 - al_get_font_ascent(fonte) / 2,
+                        ALLEGRO_ALIGN_CENTRE, "Seta direita");
+                break;
+            }
+ 
+            tecla = 0;
+        }*/
+    }
 
+     al_destroy_event_queue(fila_eventos);
+}
 
-void finaliza_jogo( Jogo* jogo ) {
+void finaliza_jogo( Jogo* jogo ) 
+{
   for( int i = 0; i < 4; i++ )
     finaliza_bunker( &jogo->bunker[i] );
-  
+
+  al_destroy_bitmap(jogo->JANELA);
   al_destroy_display( jogo->display ); 
 }
 
-void desenha_jogo( Jogo* jogo ) {
+void desenha_jogo( Jogo* jogo ) 
+{
    for( int i = 0; i < 4; i++ )
      desenha_bunker( &jogo->bunker[i] );
    
@@ -97,17 +168,21 @@ void desenha_jogo( Jogo* jogo ) {
    al_flip_display();  
 }
 
-void move_tanque_jogo( Jogo* jogo, DIRECAO direcao ) {
-  switch( direcao ) {
+void move_tanque_jogo( Jogo* jogo, DIRECAO direcao ) 
+{
+  switch( direcao ) 
+  {
     case ESQUERDA :
-      if( jogo->tanque.min_x > 0 ) {
+      if( jogo->tanque.min_x > 0 ) 
+      {
         move_tanque( &jogo->tanque, -2, 0 );
         desenha_tanque( &jogo->tanque, ESQUERDA );
       }  
       break;
 
     case DIREITA :
-      if( jogo->tanque.max_x < 639 ) {
+      if( jogo->tanque.max_x < 639 ) 
+      {
         move_tanque( &jogo->tanque, 2, 0 );
         desenha_tanque( &jogo->tanque, DIREITA );
       }
@@ -116,6 +191,7 @@ void move_tanque_jogo( Jogo* jogo, DIRECAO direcao ) {
   
   al_flip_display();  
 }
+
 /*
 // Jogo
 // Autor: GZS
