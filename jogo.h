@@ -4,8 +4,6 @@
 #ifndef JOGO_H
 #define JOGO_H
 
-#define FUNDO al_map_rgb(0, 0, 0)
-
 #include "bunker.h"
 #include "tanque.h"
 

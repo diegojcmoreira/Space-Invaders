@@ -12,14 +12,7 @@ int main(int argc, char **argv){
    ALLEGRO_DISPLAY_MODE display_data;
 
    inicializa_jogo( &jogo, 640, 480);
-
-   desenha_jogo( &jogo );
-
-  	for( int i = 0; i < 400; i++ ) {
-           move_tanque_jogo( &jogo, ESQUERDA );
-
-    }
-    
+   
     inicio(&jogo);
    
    finaliza_jogo( &jogo );
