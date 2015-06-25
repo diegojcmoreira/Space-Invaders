@@ -9,8 +9,7 @@ enum DIRECAO { ESQUERDA, DIREITA };
 struct Tanque {
   int posicao_x, posicao_y;
   int min_x, max_x, min_y, max_y;
-  int atual;
-  ALLEGRO_BITMAP* bitmap[2];
+  ALLEGRO_BITMAP* bitmap;
 };
 
 void inicializa_tanque( Tanque* t, int x, int y );
