@@ -7,6 +7,7 @@
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_image.h>
+#include <stdbool.h>
 
 #include "jogo.h"
 
@@ -68,6 +69,7 @@ void inicializa_jogo( Jogo* jogo, int largura, int altura ) {
 void inicio(Jogo* jogo) 
 {
    int tecla = 0;
+   bool sair = false;
    desenha_jogo( jogo );
 
    ALLEGRO_EVENT_QUEUE *fila_eventos = NULL;
@@ -80,7 +82,7 @@ void inicio(Jogo* jogo)
 
     al_register_event_source(fila_eventos, al_get_display_event_source(jogo->display));
     
-    while (1)
+    while (!sair)
     {
         ALLEGRO_EVENT evento;
         ALLEGRO_TIMEOUT timeout;
@@ -110,8 +112,8 @@ void inicio(Jogo* jogo)
             }
             else if (evento.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
                  {
-                    finaliza_jogo(jogo);
-                    exit(0);
+                    sair = true;
+                    break;
                  }
 
        if (tecla)
@@ -127,8 +129,8 @@ void inicio(Jogo* jogo)
                 break;
 
               case -1:
-                finaliza_jogo(jogo);
-                exit(0);
+                sair = true;
+                break;
 
             }
  
