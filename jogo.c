@@ -155,7 +155,7 @@ void desenha_jogo( Jogo* jogo )
    for( int i = 0; i < 4; i++ )
      desenha_bunker( &jogo->bunker[i] );
    
-   desenha_tanque( &jogo->tanque, ESQUERDA );
+   desenha_tanque( &jogo->tanque );
    
    al_flip_display();  
 }
