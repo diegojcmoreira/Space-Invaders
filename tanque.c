@@ -36,12 +36,12 @@ void finaliza_tanque( Tanque* t ) {
   al_destroy_bitmap( t->bitmap );
 }
 
-void desenha_tanque( Tanque* t, DIRECAO direcao ) {
+void desenha_tanque( Tanque* t ) {
   
     
   al_draw_bitmap( t->bitmap, 
       t->posicao_x + DELTA_X, 
-      t->posicao_y + DELTA_Y, flags );
+      t->posicao_y + DELTA_Y, 0 );
   
 }
 
