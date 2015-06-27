@@ -165,13 +165,8 @@ void finaliza_jogo( Jogo* jogo )
 
   //for( int i = 0; i < 4; i++ )
     //finaliza_bunker( &jogo->bunker[i] );
-<<<<<<< HEAD
   al_destroy_bitmap(jogo->JANELA);
   al_destroy_display(jogo->display);
-=======
-    al_destroy_bitmap(jogo->JANELA);
-    al_destroy_display(jogo->display);
->>>>>>> 5e4293a123a5fa8851a7b26bbf8577f40839884d
 }
 
 void move_spaceship_jogo( Jogo* jogo, DIRECAO direcao ) 
