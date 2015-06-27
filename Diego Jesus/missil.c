@@ -33,10 +33,14 @@ void desenha_missil( Missil* missil )
 {
     puts("entrou em desenha_missil");
     printf("posicao_x é :%d\nposição y é : %d\n", missil->posicao_x, missil->posicao_y );
+    int x = missil->posicao_x;
+    int y = missil->posicao_y;
+
     al_draw_bitmap( missil->bitmap, 
-      missil->posicao_x, 
-      missil->posicao_y, 0 );
-    puts("PASSOU DE ONDE EU ACHAVA QUE ERA O Erro")  
+      x - 70, 
+      y - 53, 0);
+    puts("PASSOU DE ONDE EU ACHAVA QUE ERA O Erro") ;
+    al_flip_display(); 
 }
 
 void move_missil( Missil* missil, SENTIDO sentido )
@@ -44,7 +48,7 @@ void move_missil( Missil* missil, SENTIDO sentido )
   puts("entrou em move_missil");
 
   if (sentido == CIMA ) 
-    missil->posicao_y += missil->DELTA_Y;
+    missil->posicao_y -= missil->DELTA_Y;
   if (sentido == BAIXO)
     missil->posicao_y -= missil->DELTA_Y; 
   printf("a posicao_y na função move_missil é :%d\n",missil->posicao_y );

@@ -11,6 +11,8 @@
 
 #define FPS 60
 #define N_TECLAS 3
+#define LIMITE_DIREITO 638
+#define LIMITE_ESQUERDO -42
 
 void inicializa_jogo( Jogo* jogo, int largura, int altura ) 
 {
@@ -83,7 +85,7 @@ void inicio(Jogo* jogo)
   int atira = 0;
   bool saida = false;
   bool redraw = true;
-  bool tecla[N_TECLAS] = {false, false};
+  bool tecla[N_TECLAS] = {false, false, false};
   desenha_jogo(jogo);
 
   while( !saida ) 
@@ -110,7 +112,7 @@ void inicio(Jogo* jogo)
                 tecla[TECLA_DIREITA] = true;
                 break;
 
-              case ALLEGRO_KEY_S:
+              case ALLEGRO_KEY_UP:
                 atira = 1;
                 break;
             }
@@ -154,8 +156,10 @@ void finaliza_jogo( Jogo* jogo )
   finaliza_buffer( &jogo->buffer );  
   finaliza_spaceship( &jogo->spaceship );
 
-  for( int i = 0; i < 4; i++ )
-    finaliza_bunker( &jogo->bunker[i] );
+  //for( int i = 0; i < 4; i++ )
+    //finaliza_bunker( &jogo->bunker[i] );
+    al_destroy_bitmap(jogo->JANELA);
+    al_destroy_display(jogo->display);
 }
 
 void move_spaceship_jogo( Jogo* jogo, DIRECAO direcao ) 
@@ -163,14 +167,14 @@ void move_spaceship_jogo( Jogo* jogo, DIRECAO direcao )
   switch( direcao ) 
   {
     case ESQUERDA :
-      if( jogo->spaceship.min_x > 0 ) 
+      if( jogo->spaceship.min_x > LIMITE_ESQUERDO) 
       {
         move_spaceship( &jogo->spaceship, -5, 0 );
       }  
       break;
 
     case DIREITA :
-      if( jogo->spaceship.max_x < 639 ) 
+      if( jogo->spaceship.max_x < LIMITE_DIREITO ) 
       {
         move_spaceship( &jogo->spaceship, 5, 0 );
 

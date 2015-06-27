@@ -7,7 +7,7 @@
 
 #include "spaceship.h"
 
-#define LARGURA_SPACESHIP 140
+#define LARGURA_SPACESHIP 97.5
 #define ALTURA_SPACE_SPACESHIP  106
 
 #define DELTA_X (-LARGURA_SPACESHIP/2)
