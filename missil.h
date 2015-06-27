@@ -5,7 +5,8 @@ enum SENTIDO { CIMA, BAIXO };
 
 struct Missil
 {
-	int posicao_x, posicao_y;
+	int posicao_x;
+	int posicao_y;
   	int DELTA_Y;
   	SENTIDO sentido;
 	ALLEGRO_BITMAP* bitmap;

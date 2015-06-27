@@ -29,7 +29,7 @@ struct Jogo
   ALLEGRO_BITMAP* JANELA;
   BUFFER buffer;
   ALLEGRO_TIMER* timer;
-  Missil* missil[MAX_MISSEIS];
+  Missil missil[MAX_MISSEIS];
   Alien alien[COLUNAS_TROPA][LINHAS_TROPA];
 };
 

@@ -41,7 +41,6 @@ void finaliza_alien (Alien* alien) {
 
 void desenha_alien (Alien* alien) 
 {
-	puts("ENTROU AQUI");
 	int flags = 0;
 
 	al_draw_bitmap (alien->IMAGEM, 

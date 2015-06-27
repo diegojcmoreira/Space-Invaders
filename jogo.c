@@ -14,11 +14,14 @@
 #define LIMITE_DIREITO 638
 #define LIMITE_ESQUERDO -42
 
+
+
 void inicializa_jogo( Jogo* jogo, int largura, int altura ) 
 {
 
   jogo->altura = altura;
   jogo->largura = largura;
+  jogo->N_DESTROYERS = 5;
 
   jogo->N_MISSEIS = -1;
 
@@ -75,7 +78,10 @@ void inicializa_jogo( Jogo* jogo, int largura, int altura )
    } 
    
    inicializa_spaceship( &jogo->spaceship, jogo->largura/2, 475 );
+   
    inicializa_eventos(jogo);
+
+   inicializa_tropa(jogo->alien, 100, 10);
 
    
 }
@@ -85,7 +91,7 @@ void inicio(Jogo* jogo)
   int atira = 0;
   bool saida = false;
   bool redraw = true;
-  bool tecla[N_TECLAS] = {false, false, false};
+  bool tecla[N_TECLAS] = {false, false};
   desenha_jogo(jogo);
 
   while( !saida ) 
@@ -112,7 +118,7 @@ void inicio(Jogo* jogo)
                 tecla[TECLA_DIREITA] = true;
                 break;
 
-              case ALLEGRO_KEY_UP:
+              case ALLEGRO_KEY_S:
                 atira = 1;
                 break;
             }
@@ -139,8 +145,9 @@ void inicio(Jogo* jogo)
         if( tecla[TECLA_ESQUERDA] )   
           move_spaceship_jogo( jogo, ESQUERDA );
         desenha_jogo(jogo);
-        if ( atira == 1)
-          atirar(jogo, CIMA);
+        if ( atira == 1)  
+          atirar(jogo, CIMA);         
+          
 
         atira = 0;
 
@@ -152,14 +159,14 @@ void inicio(Jogo* jogo)
 void finaliza_jogo( Jogo* jogo ) 
 {
   al_destroy_event_queue(jogo->fila_eventos);
-
-  finaliza_buffer( &jogo->buffer );  
+   
   finaliza_spaceship( &jogo->spaceship );
+  
 
   //for( int i = 0; i < 4; i++ )
     //finaliza_bunker( &jogo->bunker[i] );
-    al_destroy_bitmap(jogo->JANELA);
-    al_destroy_display(jogo->display);
+  al_destroy_bitmap(jogo->JANELA);
+  al_destroy_display(jogo->display);
 }
 
 void move_spaceship_jogo( Jogo* jogo, DIRECAO direcao ) 
@@ -167,16 +174,16 @@ void move_spaceship_jogo( Jogo* jogo, DIRECAO direcao )
   switch( direcao ) 
   {
     case ESQUERDA :
-      if( jogo->spaceship.min_x > LIMITE_ESQUERDO) 
+      if( jogo->spaceship.min_x > LIMITE_ESQUERDO ) 
       {
-        move_spaceship( &jogo->spaceship, -5, 0 );
+        move_spaceship( &jogo->spaceship, -10, 0 );
       }  
       break;
 
     case DIREITA :
       if( jogo->spaceship.max_x < LIMITE_DIREITO ) 
       {
-        move_spaceship( &jogo->spaceship, 5, 0 );
+        move_spaceship( &jogo->spaceship, 10, 0 );
 
       }
       break;
@@ -187,11 +194,14 @@ void move_spaceship_jogo( Jogo* jogo, DIRECAO direcao )
 
 void desenha_jogo( Jogo* jogo ) 
 {
-  al_draw_bitmap(jogo->JANELA, 0, 0, 0);  
+  al_draw_bitmap(jogo->JANELA, 0, 0, 0); 
+    //al_clear_to_color(al_map_rgb(255,255,10));
+
   desenha_spaceship(&jogo->spaceship);
+  desenha_tropa(jogo->alien);
 
   if ( jogo->N_MISSEIS > -1)
-    desenha_missil(jogo->missil[jogo->N_MISSEIS]);
+    desenha_missil(&jogo->missil[jogo->N_MISSEIS]);
 
   al_flip_display();
 }
@@ -228,26 +238,26 @@ void atirar(Jogo* jogo, SENTIDO sentido)
   if (jogo->N_MISSEIS < 5) 
   {
     puts("ENTROU NO IF");
-    inicializa_missil( jogo->missil[jogo->N_MISSEIS], jogo->spaceship.posicao_x, jogo->spaceship.posicao_y, sentido);
+    inicializa_missil(&jogo->missil[jogo->N_MISSEIS], jogo->spaceship.posicao_x, jogo->spaceship.posicao_y, sentido);
     if (sentido == CIMA)
     {
-      while (jogo->missil[jogo->N_MISSEIS]->posicao_y < 630)
+      while (jogo->missil[jogo->N_MISSEIS].posicao_y > 10 )
       {
         puts("entrou no loop");
-        move_missil(jogo->missil[jogo->N_MISSEIS], CIMA);
+        move_missil(&jogo->missil[jogo->N_MISSEIS], CIMA);
         desenha_jogo( jogo );
         
       }
     }
 
     if (sentido == BAIXO)
-      while (jogo->missil[jogo->N_MISSEIS]->posicao_y > 0)
+      while (jogo->missil[jogo->N_MISSEIS].posicao_y > jogo->altura)
       {
-        move_missil(jogo->missil[jogo->N_MISSEIS], BAIXO);
+        move_missil(&jogo->missil[jogo->N_MISSEIS], BAIXO);
         desenha_jogo( jogo );
 
       }
-  finaliza_missil(jogo->missil[jogo->N_MISSEIS]);
+  finaliza_missil(&jogo->missil[jogo->N_MISSEIS]);
   jogo->N_MISSEIS--;
 
   }

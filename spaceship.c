@@ -8,16 +8,16 @@
 #include "spaceship.h"
 
 #define LARGURA_SPACESHIP 97.5
-#define ALTURA_SPACE_SPACESHIP  106
+#define ALTURA_SPACESHIP  106
 
 #define DELTA_X (-LARGURA_SPACESHIP/2)
-#define DELTA_Y (-ALTURA_SPACE_SPACESHIP)
+#define DELTA_Y (-ALTURA_SPACESHIP)
 
 
 void inicializa_spaceship( SPACESHIP* spaceship, int x, int y ) 
 {
-  spaceship->posicao_x = x;
-  spaceship->posicao_y = y;
+  spaceship->posicao_x = x + DELTA_X;
+  spaceship->posicao_y = y + DELTA_Y;
   spaceship->min_x = spaceship->posicao_x + DELTA_X;
   spaceship->max_x = spaceship->posicao_x - DELTA_X;
   spaceship->min_y = spaceship->posicao_x + DELTA_Y;
@@ -42,8 +42,8 @@ void desenha_spaceship( SPACESHIP* spaceship )
   //puts("ENTROU EM desenha_spaceship");
     
   al_draw_bitmap( spaceship->bitmap, 
-      spaceship->posicao_x + DELTA_X, 
-      spaceship->posicao_y + DELTA_Y, 0 );
+      spaceship->posicao_x , 
+      spaceship->posicao_y , 0 );
   
 }
 
