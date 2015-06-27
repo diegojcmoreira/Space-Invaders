@@ -154,8 +154,10 @@ void finaliza_jogo( Jogo* jogo )
   finaliza_buffer( &jogo->buffer );  
   finaliza_spaceship( &jogo->spaceship );
 
-  for( int i = 0; i < 4; i++ )
-    finaliza_bunker( &jogo->bunker[i] );
+  //for( int i = 0; i < 4; i++ )
+    //finaliza_bunker( &jogo->bunker[i] );
+    al_destroy_bitmap(jogo->JANELA);
+    al_destroy_display(jogo->display);
 }
 
 void move_spaceship_jogo( Jogo* jogo, DIRECAO direcao ) 
