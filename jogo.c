@@ -1,5 +1,3 @@
-// Jogo
-// Autor: GZS
 #include <stdlib.h>
 #include <stdio.h>
 #include <allegro5/allegro_font.h>
@@ -11,7 +9,17 @@
 
 #include "jogo.h"
 
-void inicializa_jogo( Jogo* jogo, int largura, int altura ) {
+#define FPS 60
+#define N_TECLAS 3
+
+void inicializa_jogo( Jogo* jogo, int largura, int altura ) 
+{
+
+  jogo->altura = altura;
+  jogo->largura = largura;
+
+  jogo->N_MISSEIS = -1;
+
    if(!al_init()) {
       fprintf(stderr, "Falha ao inicializar o Allegro!\n");
       exit(-1);
@@ -34,6 +42,8 @@ void inicializa_jogo( Jogo* jogo, int largura, int altura ) {
     fprintf(stderr, "Falha ao inicializar add-on allegro_ttf.\n");
     exit(-1);
    }
+
+    
   
    if (!al_init_image_addon()) {
      fprintf(stderr, "Falha ao inicializar add-on de imagens.\n");
@@ -46,142 +56,196 @@ void inicializa_jogo( Jogo* jogo, int largura, int altura ) {
       exit(-1);
    }
    
-   jogo->JANELA = al_load_bitmap("espaco_sideral.jpg");
+   jogo->JANELA = al_load_bitmap("imagens/espaco_sideral.jpg");
    if (!jogo->JANELA)
     {
        fprintf(stderr, "Falha ao carregar o arquivo de imagem.\n");
        exit(-1);
-    }
+    } 
 
-   jogo->altura = altura;
-   jogo->largura = largura;
+   inicializa_buffer( &jogo->buffer, jogo->display, jogo->altura, jogo->largura, 
+                       jogo->bunker, &jogo->spaceship );
 
-   al_draw_bitmap(jogo->JANELA, 0, 0, 0);
       
    for( int i = 0, x = (jogo->largura / 4 - TAMANHO_BUNKER) / 2; i < 4; i++, x += jogo->largura / 4 ) 
    {
      inicializa_bunker( &jogo->bunker[i], x, 360 );
    } 
    
-   inicializa_tanque( &jogo->tanque, jogo->largura/2, 475 );
+   inicializa_spaceship( &jogo->spaceship, jogo->largura/2, 475 );
+   inicializa_eventos(jogo);
+
+   
 }
 
 void inicio(Jogo* jogo) 
 {
-   int tecla = 0;
-   bool sair = false;
-   desenha_jogo( jogo );
+  int atira = 0;
+  bool saida = false;
+  bool redraw = true;
+  bool tecla[N_TECLAS] = {false, false};
+  desenha_jogo(jogo);
 
-   ALLEGRO_EVENT_QUEUE *fila_eventos = NULL;
-   fila_eventos = al_create_event_queue();
-   if (!fila_eventos)
-    {
-       fprintf(stderr, "Falha ao criar fila de eventos.\n");
-       exit(-1);
-    }
+  while( !saida ) 
+  {
+      if( !al_is_event_queue_empty(jogo->fila_eventos) ) 
+      {
+          ALLEGRO_EVENT evento;
+          al_wait_for_event( jogo->fila_eventos, &evento );
 
-    al_register_event_source(fila_eventos, al_get_display_event_source(jogo->display));
-    
-    while (!sair)
-    {
-        ALLEGRO_EVENT evento;
-        ALLEGRO_TIMEOUT timeout;
-        al_init_timeout(&timeout, 0.00000001);
-        al_register_event_source(fila_eventos, al_get_keyboard_event_source());
-        al_register_event_source(fila_eventos, al_get_display_event_source(jogo->display));
- 
- 
-        int tem_eventos = al_wait_for_event_until(fila_eventos, &evento, &timeout);
-
-        if (evento.type == ALLEGRO_EVENT_KEY_DOWN)
+          if (evento.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
+             {
+                saida = true;
+                break;
+             }
+  
+          if( evento.type == ALLEGRO_EVENT_KEY_DOWN )
+            switch( evento.keyboard.keycode ) 
             {
-                switch(evento.keyboard.keycode)
-                {
+              case ALLEGRO_KEY_LEFT: 
+                tecla[TECLA_ESQUERDA] = true; 
+                break;
+
+              case ALLEGRO_KEY_RIGHT:
+                tecla[TECLA_DIREITA] = true;
+                break;
+
+              case ALLEGRO_KEY_S:
+                atira = 1;
+                break;
+            }
+          
+          if( evento.type == ALLEGRO_EVENT_KEY_UP ) 
+            switch( evento.keyboard.keycode ) 
+            {
+                case ALLEGRO_KEY_LEFT: 
+                  tecla[TECLA_ESQUERDA] = false;
+                  break;
+             
+                case ALLEGRO_KEY_RIGHT:
+                  tecla[TECLA_DIREITA] = false;
+                  break;
                 
-                  case ALLEGRO_KEY_LEFT:
-                    tecla = 1;
-                    break;
-                  
-                  case ALLEGRO_KEY_RIGHT:
-                    tecla = 2;
-                    break;
-
-                  case ALLEGRO_KEY_ESCAPE:
-                    tecla = -1;
-                }
+                case ALLEGRO_KEY_Q: 
+                  saida = true;
+                  break;
             }
-            else if (evento.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
-                 {
-                    sair = true;
-                    break;
-                 }
+      }
+      
+        if( tecla[TECLA_DIREITA] )
+          move_spaceship_jogo( jogo, DIREITA );
+        if( tecla[TECLA_ESQUERDA] )   
+          move_spaceship_jogo( jogo, ESQUERDA );
+        desenha_jogo(jogo);
+        if ( atira == 1)
+          atirar(jogo, CIMA);
 
-       if (tecla)
-        { 
-            switch (tecla)
-            {
-              case 1:
-                move_tanque_jogo( jogo, ESQUERDA );
-                break;
+        atira = 0;
 
-              case 2:
-                move_tanque_jogo( jogo, DIREITA );
-                break;
 
-              case -1:
-                sair = true;
-                break;
-
-            }
- 
-            tecla = 0;
-        }
-    }
-
-     al_destroy_event_queue(fila_eventos);
+  
+  }
 }
 
 void finaliza_jogo( Jogo* jogo ) 
 {
+  al_destroy_event_queue(jogo->fila_eventos);
+
+  finaliza_buffer( &jogo->buffer );  
+  finaliza_spaceship( &jogo->spaceship );
+
   for( int i = 0; i < 4; i++ )
     finaliza_bunker( &jogo->bunker[i] );
-
-  al_destroy_bitmap(jogo->JANELA);
-  al_destroy_display( jogo->display ); 
 }
 
-void desenha_jogo( Jogo* jogo ) 
-{
-   for( int i = 0; i < 4; i++ )
-     desenha_bunker( &jogo->bunker[i] );
-   
-   desenha_tanque( &jogo->tanque );
-   
-   al_flip_display();  
-}
-
-void move_tanque_jogo( Jogo* jogo, DIRECAO direcao ) 
+void move_spaceship_jogo( Jogo* jogo, DIRECAO direcao ) 
 {
   switch( direcao ) 
   {
     case ESQUERDA :
-      if( jogo->tanque.min_x > 0 ) 
+      if( jogo->spaceship.min_x > 0 ) 
       {
-        move_tanque( &jogo->tanque, -5, 0 );
-        al_draw_bitmap(jogo->JANELA, 0, 0, 0);
-        desenha_jogo( jogo );
+        move_spaceship( &jogo->spaceship, -5, 0 );
       }  
       break;
 
     case DIREITA :
-      if( jogo->tanque.max_x < 639 ) 
+      if( jogo->spaceship.max_x < 639 ) 
       {
-        move_tanque( &jogo->tanque, 5, 0 );
-        al_draw_bitmap(jogo->JANELA, 0, 0, 0);
-        desenha_jogo( jogo );
+        move_spaceship( &jogo->spaceship, 5, 0 );
+
       }
       break;
   }
   
   al_flip_display();  
 }
+
+void desenha_jogo( Jogo* jogo ) 
+{
+  al_draw_bitmap(jogo->JANELA, 0, 0, 0);  
+  desenha_spaceship(&jogo->spaceship);
+
+  if ( jogo->N_MISSEIS > -1)
+    desenha_missil(jogo->missil[jogo->N_MISSEIS]);
+
+  al_flip_display();
+}
+
+void inicializa_eventos (Jogo* jogo) 
+{
+  jogo->fila_eventos = al_create_event_queue();
+    if (!jogo->fila_eventos)
+    {
+        fprintf(stderr, "Falha ao criar fila de eventos.\n");
+        exit(-1);
+    }
+
+  al_register_event_source(jogo->fila_eventos, al_get_keyboard_event_source());
+  al_register_event_source(jogo->fila_eventos, al_get_display_event_source(jogo->display));
+}
+
+void inicializa_timer_jogo (Jogo* jogo) 
+{
+  jogo->timer = al_create_timer(1.0/FPS);
+
+  if(!jogo->timer)
+  {
+    fprintf(stderr, "Falha em executar timer!\n");
+    exit(-1);
+  }
+}
+
+void atirar(Jogo* jogo, SENTIDO sentido)
+{ 
+  jogo->N_MISSEIS++;
+  puts("FINALMENTE");
+
+  if (jogo->N_MISSEIS < 5) 
+  {
+    puts("ENTROU NO IF");
+    inicializa_missil( jogo->missil[jogo->N_MISSEIS], jogo->spaceship.posicao_x, jogo->spaceship.posicao_y, sentido);
+    if (sentido == CIMA)
+    {
+      while (jogo->missil[jogo->N_MISSEIS]->posicao_y < 630)
+      {
+        puts("entrou no loop");
+        move_missil(jogo->missil[jogo->N_MISSEIS], CIMA);
+        desenha_jogo( jogo );
+        
+      }
+    }
+
+    if (sentido == BAIXO)
+      while (jogo->missil[jogo->N_MISSEIS]->posicao_y > 0)
+      {
+        move_missil(jogo->missil[jogo->N_MISSEIS], BAIXO);
+        desenha_jogo( jogo );
+
+      }
+  finaliza_missil(jogo->missil[jogo->N_MISSEIS]);
+  jogo->N_MISSEIS--;
+
+  }
+}
+  

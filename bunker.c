@@ -40,31 +40,31 @@ void desenha_pedaco_bunker( int x, int y, LegoBunker lego, EstadoBunker estado )
     
     case QUADRADO:
           ALLEGRO_BITMAP* QUADRADO;
-          QUADRADO = al_load_bitmap("QUADRADO.png");
+          QUADRADO = al_load_bitmap("imagens/QUADRADO.png");
           al_draw_bitmap(QUADRADO, x, y, 0);
          break;
     
     case INFERIOR_DIREITO:
            ALLEGRO_BITMAP* INFERIOR_DIREITO;
-          INFERIOR_DIREITO = al_load_bitmap("INFERIOR_DIREITO.png");
+          INFERIOR_DIREITO = al_load_bitmap("imagens/INFERIOR_DIREITO.png");
           al_draw_bitmap(INFERIOR_DIREITO, x, y, 0);
          break;
 
     case INFERIOR_ESQUERDO:
            ALLEGRO_BITMAP* INFERIOR_ESQUERDO;
-          INFERIOR_ESQUERDO = al_load_bitmap("INFERIOR_ESQUERDO.png");
+          INFERIOR_ESQUERDO = al_load_bitmap("imagens/INFERIOR_ESQUERDO.png");
           al_draw_bitmap(INFERIOR_ESQUERDO, x, y, 0);
          break;
     
     case SUPERIOR_ESQUERDO:
            ALLEGRO_BITMAP* SUPERIOR_ESQUERDO;
-          SUPERIOR_ESQUERDO = al_load_bitmap("SUPERIOR_ESQUERDO.png");
+          SUPERIOR_ESQUERDO = al_load_bitmap("imagens/SUPERIOR_ESQUERDO.png");
           al_draw_bitmap(SUPERIOR_ESQUERDO, x, y, 0);
          break;
     
     case SUPERIOR_DIREITO:
           ALLEGRO_BITMAP* SUPERIOR_DIREITO;
-          SUPERIOR_DIREITO = al_load_bitmap("SUPERIOR_DIREITO.png");
+          SUPERIOR_DIREITO = al_load_bitmap("imagens/SUPERIOR_DIREITO.png");
           al_draw_bitmap(SUPERIOR_DIREITO, x, y, 0);
          break;
     

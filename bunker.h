@@ -5,7 +5,6 @@
 #define BUNKER_H
 
 #define TAMANHO_BUNKER (8*10)
-#define COR_BUNKER al_map_rgb(0, 255, 0)
 
 enum EstadoBunker { INTEIRO, AVARIADO, DESTRUIDO };
 enum LegoBunker { VAZIO, QUADRADO, 
