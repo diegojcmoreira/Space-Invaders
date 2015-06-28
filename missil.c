@@ -7,22 +7,15 @@
 
 #include "missil.h"
 #include "jogo.h"
+#include "zbuffer.h"
 
 
 void inicializa_missil( Missil* missil, int posicao_x, int y, SENTIDO sentido ) 
 {
   missil->posicao_x = posicao_x;
-    puts("entrou em inicializa_missil");
-
   missil->posicao_y = y;
-    puts("entrou em inicializa_missil");
-
   missil->DELTA_Y = 20;
-    puts("entrou em inicializa_missil");
-
-  missil->bitmap = al_load_bitmap("imagens/tanque2.png");
-    puts("entrou em inicializa_missil");
-
+  missil->bitmap = al_load_bitmap("imagens/tanque3.png");
   missil->sentido = sentido;
 
   if( missil->bitmap == NULL) 
@@ -30,7 +23,7 @@ void inicializa_missil( Missil* missil, int posicao_x, int y, SENTIDO sentido )
     puts( "Erro ao carregar o arquivo imagens/tank.png");
     exit(0);
   }
-  puts("SAIU DE inicializa_missil");
+  //puts("SAIU DE inicializa_missil");
 }
 
 void finaliza_missil( Missil* missil ) 
@@ -40,19 +33,19 @@ void finaliza_missil( Missil* missil )
 
 void desenha_missil( Missil* missil ) 
 {
-    puts("entrou em desenha_missil");
-    printf("posicao_x é :%d\nposição y é : %d\n", missil->posicao_x, missil->posicao_y );
+   // puts("entrou em desenha_missil");
+    //printf("posicao_x é :%d\nposição y é : %d\n", missil->posicao_x, missil->posicao_y );
 
     al_draw_bitmap( missil->bitmap, 
       missil->posicao_x , 
       missil->posicao_y , 0);
-    puts("PASSOU DE ONDE EU ACHAVA QUE ERA O Erro") ;
+   // puts("PASSOU DE ONDE EU ACHAVA QUE ERA O Erro") ;
     al_flip_display(); 
 }
 
 void move_missil( Missil* missil, SENTIDO sentido )
 {
-  puts("entrou em move_missil");
+  //puts("entrou em move_missil");
 
   if (sentido == CIMA ) 
     missil->posicao_y -= missil->DELTA_Y;

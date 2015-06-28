@@ -3,14 +3,9 @@
 
 #include "bunker.h"
 #include "spaceship.h"
-#include "buffer.h"
 #include "missil.h"
 #include "alien.h"
-
-
-#define MAX_MISSEIS 5
-#define MAX_DESTROYERS 5
-
+#include "zbuffer.h"
 
 
 enum TECLA { TECLA_ESQUERDA, TECLA_DIREITA, TECLA_ESC };
@@ -24,13 +19,14 @@ struct Jogo
   int N_DESTROYERS;
   ALLEGRO_DISPLAY *display;
   ALLEGRO_EVENT_QUEUE *fila_eventos;
-  Bunker bunker[4];
+  Bunker bunker[N_BUNKERS];
   SPACESHIP spaceship;
   ALLEGRO_BITMAP* JANELA;
-  BUFFER buffer;
   ALLEGRO_TIMER* timer;
   Missil missil[MAX_MISSEIS];
   Alien alien[COLUNAS_TROPA][LINHAS_TROPA];
+  ZBuffer zbuffer;
+  bool esquerda;
 };
 
 void inicializa_jogo( Jogo* jogo, int largura, int altura);
@@ -47,6 +43,6 @@ void inicializa_timer_jogo (Jogo* jogo);
 
 void inicializa_eventos (Jogo* jogo);
 
-void atirar(Jogo* jogo, SENTIDO sentido);
+//void atirar(Jogo* jogo, SENTIDO sentido);
 
 #endif

@@ -6,7 +6,7 @@
 
 #define LINHAS_TROPA 5
 #define COLUNAS_TROPA 6
-#define DISTANCIA_PASSO 5
+#define DISTANCIA_PASSO 1
 
 struct Alien 
 {
@@ -15,6 +15,7 @@ struct Alien
 	int posicao_x, posicao_y;
 	int delta_x;
 	bool vivo;
+	bool sentido;
 	ALLEGRO_BITMAP* IMAGEM;
 };
 
@@ -32,6 +33,10 @@ void inicializa_sprites_alien (Alien* alien);
 
 void finaliza_sprites_alien (Alien* alien);
 
-void move_alien (Alien* alien, DIRECAO direcao);
+void move_aliens (Alien alien[COLUNAS_TROPA][LINHAS_TROPA], DIRECAO direcao);
+
+void move_aliens_baixo(Alien alien[COLUNAS_TROPA][LINHAS_TROPA]);
+
+void automatizacao_alien( Alien alien[COLUNAS_TROPA][LINHAS_TROPA] );
 
 #endif

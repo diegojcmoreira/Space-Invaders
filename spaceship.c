@@ -6,9 +6,10 @@
 #include <allegro5/allegro_image.h>
 
 #include "spaceship.h"
+#include "zbuffer.h"
 
-#define LARGURA_SPACESHIP 97.5
-#define ALTURA_SPACESHIP  106
+#define LARGURA_SPACESHIP 53
+#define ALTURA_SPACESHIP  76
 
 #define DELTA_X (-LARGURA_SPACESHIP/2)
 #define DELTA_Y (-ALTURA_SPACESHIP)
@@ -23,7 +24,7 @@ void inicializa_spaceship( SPACESHIP* spaceship, int x, int y )
   spaceship->min_y = spaceship->posicao_x + DELTA_Y;
   spaceship->min_y = spaceship->posicao_y;
   
-  spaceship->bitmap = al_load_bitmap("imagens/tanque2.png");
+  spaceship->bitmap = al_load_bitmap("imagens/tanque3.png");
 
   if( spaceship->bitmap == NULL) 
   {
@@ -49,7 +50,7 @@ void desenha_spaceship( SPACESHIP* spaceship )
 
 void move_spaceship( SPACESHIP* spaceship, int delta_x, int delta_y ) 
 {
-  puts("ENTROU EM move_spaceship");
+  //puts("ENTROU EM move_spaceship");
   spaceship->posicao_x += delta_x;
   spaceship->posicao_y += delta_y;  
   spaceship->min_x = spaceship->posicao_x + DELTA_X;

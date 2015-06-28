@@ -11,8 +11,8 @@
 
 #define FPS 60
 #define N_TECLAS 3
-#define LIMITE_DIREITO 638
-#define LIMITE_ESQUERDO -42
+#define LIMITE_DIREITO 630
+#define LIMITE_ESQUERDO -20
 
 
 
@@ -24,6 +24,7 @@ void inicializa_jogo( Jogo* jogo, int largura, int altura )
   jogo->N_DESTROYERS = 5;
 
   jogo->N_MISSEIS = -1;
+  jogo->esquerda = true;
 
    if(!al_init()) {
       fprintf(stderr, "Falha ao inicializar o Allegro!\n");
@@ -68,8 +69,8 @@ void inicializa_jogo( Jogo* jogo, int largura, int altura )
        exit(-1);
     } 
 
-   inicializa_buffer( &jogo->buffer, jogo->display, jogo->altura, jogo->largura, 
-                       jogo->bunker, &jogo->spaceship );
+   //inicializa_buffer( &jogo->buffer, jogo->display, jogo->altura, jogo->largura, 
+     //                  jogo->bunker, &jogo->spaceship );
 
       
    for( int i = 0, x = (jogo->largura / 4 - TAMANHO_BUNKER) / 2; i < 4; i++, x += jogo->largura / 4 ) 
@@ -96,6 +97,7 @@ void inicio(Jogo* jogo)
 
   while( !saida ) 
   {
+      desenha_jogo(jogo);
       if( !al_is_event_queue_empty(jogo->fila_eventos) ) 
       {
           ALLEGRO_EVENT evento;
@@ -119,7 +121,10 @@ void inicio(Jogo* jogo)
                 break;
 
               case ALLEGRO_KEY_S:
-                atira = 1;
+                jogo->N_MISSEIS++;
+                jogo->missil[jogo->N_MISSEIS].sentido = CIMA;
+                inicializa_missil(&jogo->missil[jogo->N_MISSEIS], jogo->spaceship.posicao_x, jogo->spaceship.posicao_y, jogo->missil[jogo->N_MISSEIS].sentido);
+
                 break;
             }
           
@@ -144,9 +149,8 @@ void inicio(Jogo* jogo)
           move_spaceship_jogo( jogo, DIREITA );
         if( tecla[TECLA_ESQUERDA] )   
           move_spaceship_jogo( jogo, ESQUERDA );
-        desenha_jogo(jogo);
         if ( atira == 1)  
-          atirar(jogo, CIMA);         
+          //atirar(jogo, CIMA);         
           
 
         atira = 0;
@@ -165,13 +169,8 @@ void finaliza_jogo( Jogo* jogo )
 
   //for( int i = 0; i < 4; i++ )
     //finaliza_bunker( &jogo->bunker[i] );
-<<<<<<< HEAD
   al_destroy_bitmap(jogo->JANELA);
   al_destroy_display(jogo->display);
-=======
-    al_destroy_bitmap(jogo->JANELA);
-    al_destroy_display(jogo->display);
->>>>>>> 5e4293a123a5fa8851a7b26bbf8577f40839884d
 }
 
 void move_spaceship_jogo( Jogo* jogo, DIRECAO direcao ) 
@@ -194,20 +193,41 @@ void move_spaceship_jogo( Jogo* jogo, DIRECAO direcao )
       break;
   }
   
-  al_flip_display();  
+  //al_flip_display();  
 }
 
 void desenha_jogo( Jogo* jogo ) 
 {
+
   al_draw_bitmap(jogo->JANELA, 0, 0, 0); 
-    //al_clear_to_color(al_map_rgb(255,255,10));
+  //for( int i = 0; i < N_BUNKERS; i++ )
+    //  desenha_bunker( &jogo->bunker[i] );
 
   desenha_spaceship(&jogo->spaceship);
   desenha_tropa(jogo->alien);
+  automatizacao_alien(jogo->alien);
 
-  if ( jogo->N_MISSEIS > -1)
-    desenha_missil(&jogo->missil[jogo->N_MISSEIS]);
+  if (jogo->missil[jogo->N_MISSEIS].sentido == CIMA)
+  {
+    if ( jogo->N_MISSEIS > -1 )
+    {
+      if(jogo->missil[jogo->N_MISSEIS].posicao_y > 10)
+      {
+      //printf("a posicao_y na no inicio é :%d\n", jogo->missil[jogo->N_MISSEIS].posicao_y );
 
+      move_missil(&jogo->missil[jogo->N_MISSEIS], CIMA);
+      desenha_missil(&jogo->missil[jogo->N_MISSEIS]);
+      }
+      else
+      {
+        finaliza_missil(&jogo->missil[jogo->N_MISSEIS]);
+        //printf("PRIMEIRO N_MISSEIS:%d\n",jogo->N_MISSEIS );
+        jogo->N_MISSEIS--;
+        //printf("SEGUNDO N_MISSEIS:%d\n",jogo->N_MISSEIS );
+
+      }
+    }
+  }
   al_flip_display();
 }
 
@@ -234,7 +254,7 @@ void inicializa_timer_jogo (Jogo* jogo)
     exit(-1);
   }
 }
-
+/*
 void atirar(Jogo* jogo, SENTIDO sentido)
 { 
   jogo->N_MISSEIS++;
@@ -243,13 +263,11 @@ void atirar(Jogo* jogo, SENTIDO sentido)
   if (jogo->N_MISSEIS < 5) 
   {
     puts("ENTROU NO IF");
-    inicializa_missil(&jogo->missil[jogo->N_MISSEIS], jogo->spaceship.posicao_x, jogo->spaceship.posicao_y, sentido);
     if (sentido == CIMA)
     {
       while (jogo->missil[jogo->N_MISSEIS].posicao_y > 10 )
       {
         puts("entrou no loop");
-        move_missil(&jogo->missil[jogo->N_MISSEIS], CIMA);
         desenha_jogo( jogo );
         
       }
@@ -266,5 +284,5 @@ void atirar(Jogo* jogo, SENTIDO sentido)
   jogo->N_MISSEIS--;
 
   }
-}
+}*/
   
