@@ -4,8 +4,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define LINHAS_TROPA 5
-#define COLUNAS_TROPA 6
+#define LINHAS_TROPA 3
+#define COLUNAS_TROPA 8
 #define DISTANCIA_PASSO 1
 
 struct Alien 
@@ -14,8 +14,10 @@ struct Alien
 	int min_x, max_x, min_y, max_y;
 	int posicao_x, posicao_y;
 	int delta_x;
+	int altura;
 	bool vivo;
 	bool sentido;
+	DIRECAO direcao_atual;
 	ALLEGRO_BITMAP* IMAGEM;
 };
 
@@ -37,6 +39,13 @@ void move_aliens (Alien alien[COLUNAS_TROPA][LINHAS_TROPA], DIRECAO direcao);
 
 void move_aliens_baixo(Alien alien[COLUNAS_TROPA][LINHAS_TROPA]);
 
-void automatizacao_alien( Alien alien[COLUNAS_TROPA][LINHAS_TROPA] );
+void automatizacao_alien( Alien alien[COLUNAS_TROPA][LINHAS_TROPA]);
+
+void move_comboio (Alien alien[COLUNAS_TROPA][LINHAS_TROPA], DIRECAO direcao);
+
+void inverte_direcao(Alien alien[COLUNAS_TROPA][LINHAS_TROPA], DIRECAO direcao);
+
+void atira_tropa (Alien alien[COLUNAS_TROPA][LINHAS_TROPA], Missil* projetil);
+
 
 #endif

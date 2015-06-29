@@ -14,7 +14,7 @@ void inicializa_missil( Missil* missil, int posicao_x, int y, SENTIDO sentido )
 {
   missil->posicao_x = posicao_x;
   missil->posicao_y = y;
-  missil->DELTA_Y = 20;
+  missil->DELTA_Y = 5;
   missil->bitmap = al_load_bitmap("imagens/tanque3.png");
   missil->sentido = sentido;
 
@@ -23,6 +23,10 @@ void inicializa_missil( Missil* missil, int posicao_x, int y, SENTIDO sentido )
     puts( "Erro ao carregar o arquivo imagens/tank.png");
     exit(0);
   }
+
+  missil->altura = al_get_bitmap_height(missil->bitmap);
+  missil->largura = al_get_bitmap_width(missil->bitmap);
+
   //puts("SAIU DE inicializa_missil");
 }
 
@@ -39,8 +43,7 @@ void desenha_missil( Missil* missil )
     al_draw_bitmap( missil->bitmap, 
       missil->posicao_x , 
       missil->posicao_y , 0);
-   // puts("PASSOU DE ONDE EU ACHAVA QUE ERA O Erro") ;
-    al_flip_display(); 
+   // puts("PASSOU DE ONDE EU ACHAVA QUE ERA O Erro") ; 
 }
 
 void move_missil( Missil* missil, SENTIDO sentido )
@@ -51,5 +54,12 @@ void move_missil( Missil* missil, SENTIDO sentido )
     missil->posicao_y -= missil->DELTA_Y;
   if (sentido == BAIXO)
     missil->posicao_y += missil->DELTA_Y; 
-  printf("a posicao_y na função move_missil é :%d\n",missil->posicao_y );
+  //printf("a posicao_y na função move_missil é :%d\n",missil->posicao_y );
+}
+
+void copy_projetil (Missil* destino, Missil* origem) 
+{
+  destino->sentido = origem->sentido;
+  destino->posicao_x = origem->posicao_x;
+  destino->posicao_y = origem->posicao_y;
 }

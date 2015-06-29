@@ -19,6 +19,7 @@
 void inicializa_jogo( Jogo* jogo, int largura, int altura ) 
 {
 
+  jogo->tempo = 0;
   jogo->altura = altura;
   jogo->largura = largura;
   jogo->N_DESTROYERS = 5;
@@ -93,6 +94,7 @@ void inicio(Jogo* jogo)
   bool saida = false;
   bool redraw = true;
   bool tecla[N_TECLAS] = {false, false};
+  jogo->pause = false;
   desenha_jogo(jogo);
 
   while( !saida ) 
@@ -120,6 +122,10 @@ void inicio(Jogo* jogo)
                 tecla[TECLA_DIREITA] = true;
                 break;
 
+              case ALLEGRO_KEY_ESCAPE:
+                jogo->pause = true;
+                break;
+
               case ALLEGRO_KEY_S:
                 jogo->N_MISSEIS++;
                 jogo->missil[jogo->N_MISSEIS].sentido = CIMA;
@@ -138,6 +144,10 @@ void inicio(Jogo* jogo)
                 case ALLEGRO_KEY_RIGHT:
                   tecla[TECLA_DIREITA] = false;
                   break;
+
+                case ALLEGRO_KEY_ESCAPE:
+                  jogo->pause = false;
+                  break;
                 
                 case ALLEGRO_KEY_Q: 
                   saida = true;
@@ -149,8 +159,8 @@ void inicio(Jogo* jogo)
           move_spaceship_jogo( jogo, DIREITA );
         if( tecla[TECLA_ESQUERDA] )   
           move_spaceship_jogo( jogo, ESQUERDA );
-        if ( atira == 1)  
-          //atirar(jogo, CIMA);         
+        if ( !jogo->pause )
+          //menu(jogo);         
           
 
         atira = 0;
@@ -198,7 +208,8 @@ void move_spaceship_jogo( Jogo* jogo, DIRECAO direcao )
 
 void desenha_jogo( Jogo* jogo ) 
 {
-
+  printf("jogo tempo:%d\n", jogo->tempo );
+  //jogo->tempo++;
   al_draw_bitmap(jogo->JANELA, 0, 0, 0); 
   //for( int i = 0; i < N_BUNKERS; i++ )
     //  desenha_bunker( &jogo->bunker[i] );
@@ -207,27 +218,57 @@ void desenha_jogo( Jogo* jogo )
   desenha_tropa(jogo->alien);
   automatizacao_alien(jogo->alien);
 
-  if (jogo->missil[jogo->N_MISSEIS].sentido == CIMA)
-  {
+ 
     if ( jogo->N_MISSEIS > -1 )
     {
-      if(jogo->missil[jogo->N_MISSEIS].posicao_y > 10)
+      for (int i = 0; i < jogo->N_MISSEIS + 1; i++)
       {
-      //printf("a posicao_y na no inicio é :%d\n", jogo->missil[jogo->N_MISSEIS].posicao_y );
+        if (jogo->missil[i].sentido == CIMA)
+        {
+          if(jogo->missil[i].posicao_y > -40)
+          {
+            /*for (int k = 0; k < COLUNAS_TROPA; k++)
+              for (int l = 0; l < LINHAS_TROPA; l++)
+                if (jogo->alien[k][l].vivo)
+                  if(colisao(&jogo->missil[i], &jogo->alien[k][l]))
+                  {
+                    jogo->alien[k][l].vivo = false;
+                    break;
+                  }*/
+          //printf("a posicao_y na no inicio é :%d\n", jogo->missil[jogo->N_MISSEIS].posicao_y );
 
-      move_missil(&jogo->missil[jogo->N_MISSEIS], CIMA);
-      desenha_missil(&jogo->missil[jogo->N_MISSEIS]);
-      }
-      else
-      {
-        finaliza_missil(&jogo->missil[jogo->N_MISSEIS]);
-        //printf("PRIMEIRO N_MISSEIS:%d\n",jogo->N_MISSEIS );
-        jogo->N_MISSEIS--;
-        //printf("SEGUNDO N_MISSEIS:%d\n",jogo->N_MISSEIS );
+          move_missil(&jogo->missil[i], CIMA);
+          desenha_missil(&jogo->missil[i]);
+          }
+
+      
+            //copy_projetil (&jogo->missil[i], &jogo->missil[jogo->N_MISSEIS - 1]);
+            //desenha_missil(&jogo->missil[i]);
+            //finaliza_missil(&jogo->missil[i]);
+            //jogo->N_MISSEIS--;
+          
+          
+        }
+        else
+          if (jogo->missil[i].posicao_y < 600)
+          {
+            move_missil(&jogo->missil[i], BAIXO);
+            desenha_missil(&jogo->missil[i]);
+          }
 
       }
-    }
+
+  
   }
+  if(jogo->tempo == 100)
+  {
+    jogo->N_MISSEIS++;
+    atira_tropa(jogo->alien, &jogo->missil[jogo->N_MISSEIS]);
+    jogo->tempo = 0;
+    
+  }
+  jogo->tempo++;
+
   al_flip_display();
 }
 
@@ -252,6 +293,26 @@ void inicializa_timer_jogo (Jogo* jogo)
   {
     fprintf(stderr, "Falha em executar timer!\n");
     exit(-1);
+  }
+}
+
+bool colisao (Missil* missil, Alien* alien)
+{
+  puts("ENTROU AQUI");
+  printf("posicao_x do MISSIL:%d\nposicao_x do ALIEN%d\n",missil->posicao_x, alien->posicao_x );
+  if(missil->posicao_x > alien->max_x || missil->posicao_y > alien->max_y || missil->posicao_y + missil->altura < alien->min_y
+      || missil->posicao_x + missil->largura < alien->min_x)
+    return false;
+  
+  else
+    return true;
+}
+
+void menu(Jogo* jogo)
+{
+  while(!jogo->pause)
+  {
+    al_clear_to_color(al_map_rgba(0,0,0,100));
   }
 }
 /*

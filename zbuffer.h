@@ -9,7 +9,7 @@
 #include "missil.h"
 #include "alien.h"
 
-#define MAX_MISSEIS 5
+#define MAX_MISSEIS 100
 #define MAX_DESTROYERS 5
 #define N_BUNKERS 4
 

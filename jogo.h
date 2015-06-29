@@ -27,6 +27,8 @@ struct Jogo
   Alien alien[COLUNAS_TROPA][LINHAS_TROPA];
   ZBuffer zbuffer;
   bool esquerda;
+  bool pause;
+  int tempo;
 };
 
 void inicializa_jogo( Jogo* jogo, int largura, int altura);
@@ -42,6 +44,10 @@ void desenha_jogo( Jogo* jogo );
 void inicializa_timer_jogo (Jogo* jogo);
 
 void inicializa_eventos (Jogo* jogo);
+
+bool colisao(Missil* missil, Alien* alien);
+
+void menu(Jogo* jogo);
 
 //void atirar(Jogo* jogo, SENTIDO sentido);
 
