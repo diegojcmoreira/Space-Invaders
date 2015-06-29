@@ -18,7 +18,7 @@ void inicializa_alien (Alien* alien, int posicao_x, int posicao_y) {
 	alien->posicao_y = posicao_y;
 	alien->min_x = alien->posicao_x - alien->delta_x; 
 	alien->max_x = alien->posicao_x + alien->delta_x;
-	alien->sentido = true;
+	alien->direcao_atual = ESQUERDA;
 
 	alien->vivo = true;
 	inicializa_sprites_alien (alien);
@@ -44,7 +44,7 @@ void desenha_alien (Alien* alien)
 	int flags = 0;
 
 	al_draw_bitmap (alien->IMAGEM, 
-					alien->posicao_x + (alien->delta_x * COLUNAS_TROPA), 
+					alien->posicao_x, //(alien->delta_x * COLUNAS_TROPA), 
 					alien->posicao_y,
 					flags);
 }
@@ -73,34 +73,67 @@ void finaliza_sprites_alien (Alien* alien)
 	al_destroy_bitmap(alien->IMAGEM);
 }
 
-void move_aliens (Alien alien[COLUNAS_TROPA][LINHAS_TROPA], DIRECAO direcao) 
+void move_aliens (Alien* alien, DIRECAO direcao) 
 {
+	if (direcao == ESQUERDA)
+		alien->posicao_x -= DISTANCIA_PASSO;
+			
+	
+	if (direcao == DIREITA)
+		alien->posicao_x += DISTANCIA_PASSO;
+}
+
+void move_comboio (Alien alien[COLUNAS_TROPA][LINHAS_TROPA], DIRECAO direcao)
+{
+
 	if (direcao == ESQUERDA)
 		for(int i = 0; i < COLUNAS_TROPA; i++ )
 			for(int j = 0; j < LINHAS_TROPA; j++ )
-				alien[i][j].posicao_x -= DISTANCIA_PASSO;	
+				move_aliens(&alien[i][j], direcao);
 	
 	if (direcao == DIREITA)
 		for(int i = 0; i < COLUNAS_TROPA; i++ )
 			for(int j = 0; j < LINHAS_TROPA; j++ )
-				alien[i][j].posicao_x += DISTANCIA_PASSO;
+				move_aliens(&alien[i][j], direcao);
+
 }
 
 void move_aliens_baixo(Alien alien[COLUNAS_TROPA][LINHAS_TROPA])
 {
 	for(int i = 0; i < COLUNAS_TROPA; i++ )
 		for(int j = 0; j < LINHAS_TROPA; j++ )
-			alien[i][j].posicao_y += DISTANCIA_PASSO;	
+			alien[i][j].posicao_y += 10;	
 }
 
-void automatizacao_alien( Alien alien[COLUNAS_TROPA][LINHAS_TROPA] )
+void automatizacao_alien( Alien alien[COLUNAS_TROPA][LINHAS_TROPA])
 {
-	if (alien[0][0].posicao_x > 15 )
-  	{
-    move_aliens (alien, ESQUERDA);
-    desenha_tropa(alien);
-  	}
-  
-  	printf("15");
+	if(alien[0][0].direcao_atual == ESQUERDA)
+		if (alien[0][0].posicao_x > -20 )
+	  	{
+		    move_comboio (alien, ESQUERDA);
+		    desenha_tropa(alien);
+	  	}
+	  	else
+	  		inverte_direcao(alien, DIREITA);
+	
+	if(alien[0][0].direcao_atual == DIREITA)
+	  	if (alien[LINHAS_TROPA -1 ][LINHAS_TROPA - 1].posicao_x < 630)
+	  	{
+			move_comboio (alien, DIREITA);
+	    	desenha_tropa(alien); 
+	  	}
+	  	else
+	  		inverte_direcao(alien, ESQUERDA);
+  	//printf("15");
 
+}
+
+void inverte_direcao(Alien alien[COLUNAS_TROPA][LINHAS_TROPA], DIRECAO direcao)
+{
+	move_aliens_baixo(alien);
+	for (int i = 0; i < COLUNAS_TROPA; i++)
+		for (int j = 0; j < LINHAS_TROPA; j++)
+			alien[i][j].direcao_atual = direcao;
+
+	
 }
