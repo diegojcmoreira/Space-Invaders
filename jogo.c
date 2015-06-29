@@ -26,49 +26,20 @@ void inicializa_jogo( Jogo* jogo, int largura, int altura )
 
   jogo->N_MISSEIS = -1;
   jogo->esquerda = true;
-
-   if(!al_init()) {
-      fprintf(stderr, "Falha ao inicializar o Allegro!\n");
-      exit(-1);
-   }
-   
-   if (!al_init_primitives_addon()) {
-     fprintf(stderr, "Falha ao inicializar add-on de primitivas.\n");
-     exit(-1);
-   }
-
-   if (!al_install_keyboard())
-   {
-     fprintf(stderr, "Falha ao inicializar o teclado.\n");
-     exit(-1);
-   }
-
-   al_init_font_addon();
-   if (!al_init_ttf_addon())
-   {
-    fprintf(stderr, "Falha ao inicializar add-on allegro_ttf.\n");
-    exit(-1);
-   }
-
-    
   
-   if (!al_init_image_addon()) {
-     fprintf(stderr, "Falha ao inicializar add-on de imagens.\n");
-     exit(-1);
-   }
-   
-   jogo->display = al_create_display( largura, altura );
-   if(!jogo->display) {
-      fprintf(stderr, "Falha ao criar o display!\n");
-      exit(-1);
-   }
-   
-   jogo->JANELA = al_load_bitmap("imagens/espaco_sideral.jpg");
-   if (!jogo->JANELA)
-    {
-       fprintf(stderr, "Falha ao carregar o arquivo de imagem.\n");
-       exit(-1);
-    } 
+  inicializar_allegro();
+
+  inicializa_primitivas_allegro();
+
+  inicializar_teclado_allegro();
+
+  inicializar_fontes_allegro();
+
+  inicializar_imagem_allegro();
+
+  inicializar_display(jogo);
+
+  inicializar_fundo_allegro(jogo);
 
    //inicializa_buffer( &jogo->buffer, jogo->display, jogo->altura, jogo->largura, 
      //                  jogo->bunker, &jogo->spaceship );
@@ -346,4 +317,74 @@ void atirar(Jogo* jogo, SENTIDO sentido)
 
   }
 }*/
+
+void inicializar_allegro()
+{
+    if(!al_init()) 
+    {
+      fprintf(stderr, "Falha ao inicializar o Allegro!\n");
+      exit(-1);
+    }
+}
+
+void inicializa_primitivas_allegro()
+{
+    if (!al_init_primitives_addon()) 
+    {
+      fprintf(stderr, "Falha ao inicializar add-on de primitivas.\n");
+      exit(-1);
+    }
+}
   
+void inicializar_teclado_allegro()
+{
+  if (!al_install_keyboard())
+    {
+      fprintf(stderr, "Falha ao inicializar o teclado.\n");
+      exit(-1);
+    }
+}
+
+void inicializar_fontes_allegro()
+{
+    al_init_font_addon();
+    if (!al_init_ttf_addon())
+    {
+      fprintf(stderr, "Falha ao inicializar add-on allegro_ttf.\n");
+      exit(-1);
+    }
+}
+
+void inicializar_imagem_allegro()
+{
+    if (!al_init_image_addon()) 
+    {
+      fprintf(stderr, "Falha ao inicializar add-on de imagens.\n");
+      exit(-1);
+    }
+}
+
+void inicializar_display(Jogo* jogo)
+{
+    jogo->display = al_create_display( jogo->largura, jogo->altura );
+    if(!jogo->display) 
+    {
+      fprintf(stderr, "Falha ao criar o display!\n");
+      exit(-1);
+    }
+}
+
+void inicializar_fundo_allegro(Jogo* jogo)
+{
+    jogo->JANELA = al_load_bitmap("imagens/espaco_sideral.jpg");
+    if (!jogo->JANELA)
+    {
+       fprintf(stderr, "Falha ao carregar o arquivo de imagem.\n");
+       exit(-1);
+    } 
+}
+
+   
+   
+   
+   
