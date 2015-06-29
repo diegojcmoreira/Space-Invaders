@@ -49,6 +49,20 @@ bool colisao(Missil* missil, Alien* alien);
 
 void menu(Jogo* jogo);
 
+void inicializar_fundo_allegro(Jogo* jogo);
+
+void inicializar_display(Jogo* jogo);
+
+void inicializar_imagem_allegro();
+
+void inicializar_fontes_allegro();
+
+void inicializar_teclado_allegro();
+
+void inicializa_primitivas_allegro();
+
+void inicializar_allegro();
+
 //void atirar(Jogo* jogo, SENTIDO sentido);
 
 #endif
