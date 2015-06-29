@@ -20,8 +20,12 @@ void inicializa_alien (Alien* alien, int posicao_x, int posicao_y) {
 	alien->min_x = alien->posicao_x - alien->delta_x; 
 	alien->max_x = alien->posicao_x + alien->delta_x;
 	alien->direcao_atual = ESQUERDA;
+<<<<<<< HEAD
 	alien->max_y = posicao_y - alien->altura;
 	alien->min_y = posicao_y + alien->altura;
+=======
+
+>>>>>>> 71c91122ae6b594b78375ef6c3904cb8773164a9
 	alien->vivo = true;
 	inicializa_sprites_alien (alien);
 	alien->altura = al_get_bitmap_height(alien->IMAGEM);
@@ -141,6 +145,7 @@ void inverte_direcao(Alien alien[COLUNAS_TROPA][LINHAS_TROPA], DIRECAO direcao)
 
 	
 }
+<<<<<<< HEAD
 
 void atira_tropa (Alien alien[COLUNAS_TROPA][LINHAS_TROPA], Missil* projetil) 
 {
@@ -159,3 +164,5 @@ void atira_tropa (Alien alien[COLUNAS_TROPA][LINHAS_TROPA], Missil* projetil)
                                 alien[quem_atira_x][quem_atira_y].posicao_y + alien[0][0].altura, BAIXO); 
 
 }
+=======
+>>>>>>> 71c91122ae6b594b78375ef6c3904cb8773164a9

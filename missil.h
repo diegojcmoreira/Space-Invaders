@@ -1,8 +1,6 @@
 #ifndef Missil_H
 #define Missil_H
 
-#define LINHAS_TROPA 3
-
 enum SENTIDO { CIMA, BAIXO };
 
 struct Missil
