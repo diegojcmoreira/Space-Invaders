@@ -75,6 +75,7 @@ void inicializar_tela_inicial(Jogo* jogo);
 
 void tela_inicial (Jogo* jogo);
 
+
 //void atirar(Jogo* jogo, SENTIDO sentido);
 
 #endif

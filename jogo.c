@@ -26,9 +26,22 @@ void inicializa_jogo( Jogo* jogo, int largura, int altura )
 
   jogo->N_MISSEIS = 0;
   jogo->esquerda = true;
+  
+  inicializar_allegro();
 
   inicializar_fundo(jogo);
 
+  inicializa_primitivas_allegro();
+
+  inicializar_teclado_allegro();
+
+  inicializar_fontes_allegro();
+
+  inicializar_imagem_allegro();
+
+  inicializar_display(jogo);
+
+  inicializar_fundo_allegro(jogo);
    //inicializa_buffer( &jogo->buffer, jogo->display, jogo->altura, jogo->largura, 
      //                  jogo->bunker, &jogo->spaceship );
 
@@ -356,6 +369,7 @@ void inicializar_fundo_allegro(Jogo* jogo)
     } 
 }
 
+<<<<<<< HEAD
 void inicializar_tela_inicial(Jogo* jogo)
 {
     jogo->TELA_INICIAL = al_load_bitmap("imagens/fundo2.png");
@@ -407,3 +421,9 @@ void tela_inicial (Jogo* jogo)
    
    
    
+=======
+   
+   
+   
+   
+>>>>>>> 8cc9d593f113ffc2795ce93745e3da90ca937a43
