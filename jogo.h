@@ -7,6 +7,9 @@
 #include "alien.h"
 #include "zbuffer.h"
 
+#define DISPLAY_WIDTH 640
+#define DISPLAY_HEIGHT 480
+
 
 enum TECLA { TECLA_ESQUERDA, TECLA_DIREITA, TECLA_ESC };
 
@@ -23,6 +26,7 @@ struct Jogo
   SPACESHIP spaceship;
   ALLEGRO_BITMAP* JANELA;
   ALLEGRO_TIMER* timer;
+  ALLEGRO_BITMAP* TELA_INICIAL;
   Missil missil[MAX_MISSEIS];
   Alien alien[COLUNAS_TROPA][LINHAS_TROPA];
   ZBuffer zbuffer;
@@ -48,6 +52,28 @@ void inicializa_eventos (Jogo* jogo);
 bool colisao(Missil* missil, Alien* alien);
 
 void menu(Jogo* jogo);
+
+void inicializar_fundo_allegro(Jogo* jogo);
+
+void inicializar_display(Jogo* jogo);
+
+void inicializar_imagem_allegro();
+
+void inicializar_fontes_allegro();
+
+void inicializar_teclado_allegro();
+
+void inicializa_primitivas_allegro();
+
+void inicializar_allegro();
+
+void inicializar_todo_allegro();
+
+void inicializar_fundo(Jogo* jogo);
+
+void inicializar_tela_inicial(Jogo* jogo);
+
+void tela_inicial (Jogo* jogo);
 
 //void atirar(Jogo* jogo, SENTIDO sentido);
 

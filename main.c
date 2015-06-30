@@ -11,7 +11,11 @@ int main(int argc, char **argv){
    Jogo jogo;
    ALLEGRO_DISPLAY_MODE display_data;
 
-   inicializa_jogo( &jogo, 640, 480);
+   inicializar_todo_allegro();
+
+   inicializa_jogo( &jogo, DISPLAY_WIDTH, DISPLAY_HEIGHT);
+
+   tela_inicial(&jogo);
    
    inicio(&jogo);
    

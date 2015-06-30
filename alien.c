@@ -17,19 +17,25 @@ void inicializa_alien (Alien* alien, int posicao_x, int posicao_y) {
 	alien->posicao_x = posicao_x;
 	alien->posicao_y = posicao_y;
 	
-	alien->min_x = alien->posicao_x - alien->delta_x; 
-	alien->max_x = alien->posicao_x + alien->delta_x;
+	
 	alien->direcao_atual = ESQUERDA;
-<<<<<<< HEAD
-	alien->max_y = posicao_y - alien->altura;
-	alien->min_y = posicao_y + alien->altura;
-=======
+	
 
->>>>>>> 71c91122ae6b594b78375ef6c3904cb8773164a9
 	alien->vivo = true;
 	inicializa_sprites_alien (alien);
 	alien->altura = al_get_bitmap_height(alien->IMAGEM);
 	alien->delta_x = al_get_bitmap_width(alien->IMAGEM);
+	alien->max_y = posicao_y + alien->altura;
+	alien->min_y = posicao_y - alien->altura;
+	alien->min_x = alien->posicao_x - alien->delta_x; 
+	alien->max_x = alien->posicao_x + alien->delta_x;
+	puts("alien->max_y = posicao_y + alien->altura;");
+	printf("max_y = %d\n", alien->max_y );
+	printf("alien altura = %d\n", alien->altura );
+	printf("alien posicao_y = %d\n", alien->posicao_y);
+	printf("alien altura + posicao_y = %d\n", alien->posicao_y + alien->altura );
+
+
 	
 }
 
@@ -145,9 +151,8 @@ void inverte_direcao(Alien alien[COLUNAS_TROPA][LINHAS_TROPA], DIRECAO direcao)
 
 	
 }
-<<<<<<< HEAD
 
-void atira_tropa (Alien alien[COLUNAS_TROPA][LINHAS_TROPA], Missil* projetil) 
+void atira_comboio (Alien alien[COLUNAS_TROPA][LINHAS_TROPA], Missil* missil) 
 {
     srand(time(NULL));
     int quem_atira_x = rand() % COLUNAS_TROPA;
@@ -160,9 +165,6 @@ void atira_tropa (Alien alien[COLUNAS_TROPA][LINHAS_TROPA], Missil* projetil)
         quem_atira_y--;
     puts("ENTROU NO ATIRA TROPA");
 
-    inicializa_missil (projetil, alien[quem_atira_x][quem_atira_y].posicao_x + alien[quem_atira_x][quem_atira_y].delta_x,
+    inicializa_missil (missil, alien[quem_atira_x][quem_atira_y].posicao_x + alien[quem_atira_x][quem_atira_y].delta_x,
                                 alien[quem_atira_x][quem_atira_y].posicao_y + alien[0][0].altura, BAIXO); 
-
 }
-=======
->>>>>>> 71c91122ae6b594b78375ef6c3904cb8773164a9

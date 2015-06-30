@@ -45,7 +45,7 @@ void move_comboio (Alien alien[COLUNAS_TROPA][LINHAS_TROPA], DIRECAO direcao);
 
 void inverte_direcao(Alien alien[COLUNAS_TROPA][LINHAS_TROPA], DIRECAO direcao);
 
-void atira_tropa (Alien alien[COLUNAS_TROPA][LINHAS_TROPA], Missil* projetil);
+void atira_comboio (Alien alien[COLUNAS_TROPA][LINHAS_TROPA], Missil* projetil);
 
 
 #endif

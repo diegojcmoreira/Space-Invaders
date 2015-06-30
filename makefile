@@ -1,5 +1,5 @@
 all: jogo.o spaceship.o bunker.o missil.o alien.o zbuffer.o
-	g++ main.c jogo.o bunker.o missil.o spaceship.o alien.o zbuffer.o -o teste -lallegro -lallegro_dialog -lallegro_image -lallegro_primitives -lallegro_font -lallegro_ttf -lallegro_ttf
+	g++ -g main.c jogo.o bunker.o missil.o spaceship.o alien.o zbuffer.o -o teste -lallegro -lallegro_dialog -lallegro_image -lallegro_primitives -lallegro_font -lallegro_ttf -lallegro_ttf
 	rm jogo.o
 	rm spaceship.o
 	rm bunker.o

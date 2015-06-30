@@ -24,51 +24,10 @@ void inicializa_jogo( Jogo* jogo, int largura, int altura )
   jogo->largura = largura;
   jogo->N_DESTROYERS = 5;
 
-  jogo->N_MISSEIS = -1;
+  jogo->N_MISSEIS = 0;
   jogo->esquerda = true;
 
-   if(!al_init()) {
-      fprintf(stderr, "Falha ao inicializar o Allegro!\n");
-      exit(-1);
-   }
-   
-   if (!al_init_primitives_addon()) {
-     fprintf(stderr, "Falha ao inicializar add-on de primitivas.\n");
-     exit(-1);
-   }
-
-   if (!al_install_keyboard())
-   {
-     fprintf(stderr, "Falha ao inicializar o teclado.\n");
-     exit(-1);
-   }
-
-   al_init_font_addon();
-   if (!al_init_ttf_addon())
-   {
-    fprintf(stderr, "Falha ao inicializar add-on allegro_ttf.\n");
-    exit(-1);
-   }
-
-    
-  
-   if (!al_init_image_addon()) {
-     fprintf(stderr, "Falha ao inicializar add-on de imagens.\n");
-     exit(-1);
-   }
-   
-   jogo->display = al_create_display( largura, altura );
-   if(!jogo->display) {
-      fprintf(stderr, "Falha ao criar o display!\n");
-      exit(-1);
-   }
-   
-   jogo->JANELA = al_load_bitmap("imagens/espaco_sideral.jpg");
-   if (!jogo->JANELA)
-    {
-       fprintf(stderr, "Falha ao carregar o arquivo de imagem.\n");
-       exit(-1);
-    } 
+  inicializar_fundo(jogo);
 
    //inicializa_buffer( &jogo->buffer, jogo->display, jogo->altura, jogo->largura, 
      //                  jogo->bunker, &jogo->spaceship );
@@ -90,9 +49,7 @@ void inicializa_jogo( Jogo* jogo, int largura, int altura )
 
 void inicio(Jogo* jogo) 
 {
-  int atira = 0;
   bool saida = false;
-  bool redraw = true;
   bool tecla[N_TECLAS] = {false, false};
   jogo->pause = false;
   desenha_jogo(jogo);
@@ -127,9 +84,11 @@ void inicio(Jogo* jogo)
                 break;
 
               case ALLEGRO_KEY_S:
+                inicializa_missil(&jogo->missil[jogo->N_MISSEIS], jogo->spaceship.posicao_x, jogo->spaceship.posicao_y, jogo->missil[jogo->N_MISSEIS].sentido);
                 jogo->N_MISSEIS++;
                 jogo->missil[jogo->N_MISSEIS].sentido = CIMA;
-                inicializa_missil(&jogo->missil[jogo->N_MISSEIS], jogo->spaceship.posicao_x, jogo->spaceship.posicao_y, jogo->missil[jogo->N_MISSEIS].sentido);
+                
+
 
                 break;
             }
@@ -159,14 +118,7 @@ void inicio(Jogo* jogo)
           move_spaceship_jogo( jogo, DIREITA );
         if( tecla[TECLA_ESQUERDA] )   
           move_spaceship_jogo( jogo, ESQUERDA );
-        if ( !jogo->pause )
-          //menu(jogo);         
-          
-
-        atira = 0;
-
-
-  
+       
   }
 }
 
@@ -177,8 +129,8 @@ void finaliza_jogo( Jogo* jogo )
   finaliza_spaceship( &jogo->spaceship );
   
 
-  //for( int i = 0; i < 4; i++ )
-    //finaliza_bunker( &jogo->bunker[i] );
+  for( int i = 0; i < 4; i++ )
+    finaliza_bunker( &jogo->bunker[i] );
   al_destroy_bitmap(jogo->JANELA);
   al_destroy_display(jogo->display);
 }
@@ -203,13 +155,10 @@ void move_spaceship_jogo( Jogo* jogo, DIRECAO direcao )
       break;
   }
   
-  //al_flip_display();  
 }
 
 void desenha_jogo( Jogo* jogo ) 
 {
-  printf("jogo tempo:%d\n", jogo->tempo );
-  //jogo->tempo++;
   al_draw_bitmap(jogo->JANELA, 0, 0, 0); 
   //for( int i = 0; i < N_BUNKERS; i++ )
     //  desenha_bunker( &jogo->bunker[i] );
@@ -218,55 +167,49 @@ void desenha_jogo( Jogo* jogo )
   desenha_tropa(jogo->alien);
   automatizacao_alien(jogo->alien);
 
- 
-    if ( jogo->N_MISSEIS > -1 )
-    {
-      for (int i = 0; i < jogo->N_MISSEIS + 1; i++)
-      {
-        if (jogo->missil[i].sentido == CIMA)
-        {
-          if(jogo->missil[i].posicao_y > -40)
-          {
-            /*for (int k = 0; k < COLUNAS_TROPA; k++)
-              for (int l = 0; l < LINHAS_TROPA; l++)
-                if (jogo->alien[k][l].vivo)
-                  if(colisao(&jogo->missil[i], &jogo->alien[k][l]))
-                  {
-                    jogo->alien[k][l].vivo = false;
-                    break;
-                  }*/
-          //printf("a posicao_y na no inicio é :%d\n", jogo->missil[jogo->N_MISSEIS].posicao_y );
-
-          move_missil(&jogo->missil[i], CIMA);
-          desenha_missil(&jogo->missil[i]);
-          }
-
-      
-            //copy_projetil (&jogo->missil[i], &jogo->missil[jogo->N_MISSEIS - 1]);
-            //desenha_missil(&jogo->missil[i]);
-            //finaliza_missil(&jogo->missil[i]);
-            //jogo->N_MISSEIS--;
-          
+  for (int i = 0; i < jogo->N_MISSEIS; i++) {
+        desenha_missil(&jogo->missil[i]);
+        move_missil(&jogo->missil[i], jogo->missil[i].sentido);
+        
+        if (jogo->missil[i].posicao_y < 0 - jogo->missil[i].altura) {
+          //if(colisao(jogo->missil[i], alien)) 
+            copy_projetil(&jogo->missil[i], &jogo->missil[jogo->N_MISSEIS-1]);
+            desenha_missil(&jogo->missil[i]);
+            finaliza_missil(&jogo->missil[jogo->N_MISSEIS-1]);
+            jogo->N_MISSEIS--;
           
         }
-        else
+    }     
+        
+       /* if(jogo->missil[i].sentido == BAIXO)
           if (jogo->missil[i].posicao_y < 600)
           {
             move_missil(&jogo->missil[i], BAIXO);
             desenha_missil(&jogo->missil[i]);
           }
+          //else{
+            //finaliza_missil(&jogo->missil[i]);
+            //jogo->N_MISSEIS--;
+            //printf("%d\n",jogo->N_MISSEIS );
+              
+          //}
 
-      }
+      */
 
   
-  }
+  
   if(jogo->tempo == 100)
   {
-    jogo->N_MISSEIS++;
-    atira_tropa(jogo->alien, &jogo->missil[jogo->N_MISSEIS]);
-    jogo->tempo = 0;
-    
+  
+      jogo->N_MISSEIS++;
+      atira_comboio(jogo->alien, &jogo->missil[jogo->N_MISSEIS]);
   }
+      
+      
+    
+    jogo->tempo = 0;
+    printf("%d\n", jogo->N_MISSEIS );
+  
   jogo->tempo++;
 
   al_flip_display();
@@ -298,10 +241,10 @@ void inicializa_timer_jogo (Jogo* jogo)
 
 bool colisao (Missil* missil, Alien* alien)
 {
-  puts("ENTROU AQUI");
-  printf("posicao_x do MISSIL:%d\nposicao_x do ALIEN%d\n",missil->posicao_x, alien->posicao_x );
-  if(missil->posicao_x > alien->max_x || missil->posicao_y > alien->max_y || missil->posicao_y + missil->altura < alien->min_y
-      || missil->posicao_x + missil->largura < alien->min_x)
+  //puts("ENTROU AQUI");
+  //printf("posicao_x do MISSIL:%d\nposicao_x do ALIEN%d\n",missil->posicao_x, alien->posicao_x );
+  if(missil->posicao_x > alien->max_x || missil->posicao_y > alien->max_y || missil->posicao_y + missil->altura < alien->posicao_y
+      || missil->posicao_x + missil->largura < alien->posicao_x)
     return false;
   
   else
@@ -346,4 +289,121 @@ void atirar(Jogo* jogo, SENTIDO sentido)
 
   }
 }*/
+
+void inicializar_allegro()
+{
+    if(!al_init()) 
+    {
+      fprintf(stderr, "Falha ao inicializar o Allegro!\n");
+      exit(-1);
+    }
+}
+
+void inicializa_primitivas_allegro()
+{
+    if (!al_init_primitives_addon()) 
+    {
+      fprintf(stderr, "Falha ao inicializar add-on de primitivas.\n");
+      exit(-1);
+    }
+}
   
+void inicializar_teclado_allegro()
+{
+  if (!al_install_keyboard())
+    {
+      fprintf(stderr, "Falha ao inicializar o teclado.\n");
+      exit(-1);
+    }
+}
+
+void inicializar_fontes_allegro()
+{
+    al_init_font_addon();
+    if (!al_init_ttf_addon())
+    {
+      fprintf(stderr, "Falha ao inicializar add-on allegro_ttf.\n");
+      exit(-1);
+    }
+}
+
+void inicializar_imagem_allegro()
+{
+    if (!al_init_image_addon()) 
+    {
+      fprintf(stderr, "Falha ao inicializar add-on de imagens.\n");
+      exit(-1);
+    }
+}
+
+void inicializar_display(Jogo* jogo)
+{
+    jogo->display = al_create_display( jogo->largura, jogo->altura );
+    if(!jogo->display) 
+    {
+      fprintf(stderr, "Falha ao criar o display!\n");
+      exit(-1);
+    }
+}
+
+void inicializar_fundo_allegro(Jogo* jogo)
+{
+    jogo->JANELA = al_load_bitmap("imagens/espaco_sideral.jpg");
+    if (!jogo->JANELA)
+    {
+       fprintf(stderr, "Falha ao carregar o arquivo de imagem.\n");
+       exit(-1);
+    } 
+}
+
+void inicializar_tela_inicial(Jogo* jogo)
+{
+    jogo->TELA_INICIAL = al_load_bitmap("imagens/fundo2.png");
+    if (!jogo->TELA_INICIAL)
+    {
+       fprintf(stderr, "Falha ao carregar o arquivo de imagem.\n");
+       exit(-1);
+    } 
+}
+
+
+void inicializar_todo_allegro() {
+
+  inicializar_allegro();
+
+  inicializa_primitivas_allegro();
+
+  inicializar_teclado_allegro();
+
+  inicializar_fontes_allegro();
+
+  inicializar_imagem_allegro();
+
+  
+}
+
+void inicializar_fundo(Jogo* jogo) {
+
+
+  inicializar_display(jogo);
+
+  inicializar_fundo_allegro(jogo);
+
+  inicializar_tela_inicial(jogo);
+
+}
+
+void tela_inicial (Jogo* jogo)
+{
+
+   al_draw_bitmap(jogo->TELA_INICIAL, 0, 0, 0);
+
+    al_flip_display();
+
+    al_rest(10);
+}
+
+   
+   
+   
+   

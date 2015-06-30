@@ -15,7 +15,7 @@ void inicializa_missil( Missil* missil, int posicao_x, int y, SENTIDO sentido )
   missil->posicao_x = posicao_x;
   missil->posicao_y = y;
   missil->DELTA_Y = 5;
-  missil->bitmap = al_load_bitmap("imagens/tanque3.png");
+  missil->bitmap = al_load_bitmap("imagens/missil.jpg");
   missil->sentido = sentido;
 
   if( missil->bitmap == NULL) 
@@ -26,6 +26,7 @@ void inicializa_missil( Missil* missil, int posicao_x, int y, SENTIDO sentido )
 
   missil->altura = al_get_bitmap_height(missil->bitmap);
   missil->largura = al_get_bitmap_width(missil->bitmap);
+  //printf("largura do bitmap:%d\naltura do bitmap%d\n", missil->largura, missil->altura );
 
   //puts("SAIU DE inicializa_missil");
 }
