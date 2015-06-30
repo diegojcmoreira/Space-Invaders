@@ -15,7 +15,7 @@ int main(int argc, char **argv){
 
    inicializa_jogo( &jogo, DISPLAY_WIDTH, DISPLAY_HEIGHT);
 
-   tela_inicial(&jogo);
+   //tela_inicial(&jogo);
    
    inicio(&jogo);
    

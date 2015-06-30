@@ -97,9 +97,9 @@ void inicio(Jogo* jogo)
                 break;
 
               case ALLEGRO_KEY_S:
-                inicializa_missil(&jogo->missil[jogo->N_MISSEIS], jogo->spaceship.posicao_x, jogo->spaceship.posicao_y, jogo->missil[jogo->N_MISSEIS].sentido);
+                inicializa_missil(&jogo->missil[jogo->N_MISSEIS], jogo->spaceship.posicao_x, jogo->spaceship.posicao_y, CIMA);
+                //jogo->missil[jogo->N_MISSEIS].sentido = CIMA;
                 jogo->N_MISSEIS++;
-                jogo->missil[jogo->N_MISSEIS].sentido = CIMA;
                 
 
 
@@ -192,6 +192,15 @@ void desenha_jogo( Jogo* jogo )
             jogo->N_MISSEIS--;
           
         }
+        else 
+          if (jogo->missil[i].posicao_y > 700 - jogo->missil[i].altura) {
+          //if(colisao(jogo->missil[i], alien)) 
+            copy_projetil(&jogo->missil[i], &jogo->missil[jogo->N_MISSEIS-1]);
+            desenha_missil(&jogo->missil[i]);
+            finaliza_missil(&jogo->missil[jogo->N_MISSEIS-1]);
+            jogo->N_MISSEIS--;
+          
+        }
     }     
         
        /* if(jogo->missil[i].sentido == BAIXO)
@@ -211,16 +220,18 @@ void desenha_jogo( Jogo* jogo )
 
   
   
-  if(jogo->tempo == 100)
+  if(jogo->tempo == 50)
   {
   
-      jogo->N_MISSEIS++;
+      
       atira_comboio(jogo->alien, &jogo->missil[jogo->N_MISSEIS]);
+      jogo->N_MISSEIS++;
+      jogo->tempo = 0;
   }
       
       
     
-    jogo->tempo = 0;
+    
     printf("%d\n", jogo->N_MISSEIS );
   
   jogo->tempo++;
@@ -369,7 +380,6 @@ void inicializar_fundo_allegro(Jogo* jogo)
     } 
 }
 
-<<<<<<< HEAD
 void inicializar_tela_inicial(Jogo* jogo)
 {
     jogo->TELA_INICIAL = al_load_bitmap("imagens/fundo2.png");
@@ -416,14 +426,3 @@ void tela_inicial (Jogo* jogo)
 
     al_rest(10);
 }
-
-   
-   
-   
-   
-=======
-   
-   
-   
-   
->>>>>>> 8cc9d593f113ffc2795ce93745e3da90ca937a43
