@@ -339,11 +339,9 @@ for (int i = 0; i < jogo->N_MISSEIS; i++)
       if ((!(jogo->missil[i].posicao_x > bunker->posicao_x + (bunker->largura/ PEDACOS_LARGURA)*l
         || jogo->missil[i].posicao_y > bunker->posicao_y + (bunker->altura/ PEDACOS_ALTURA)*k
         || jogo->missil[i].posicao_x + jogo->missil[i].largura < bunker->posicao_x +(bunker->largura/PEDACOS_LARGURA)*l 
-        || jogo->missil[i].posicao_y + jogo->missil[i].altura < bunker->posicao_y + (bunker->altura/ PEDACOS_ALTURA)*k))) 
+        || jogo->missil[i].posicao_y + jogo->missil[i].altura < bunker->posicao_y + (bunker->altura/ PEDACOS_ALTURA)*k))
+        && bunker->pedaco[l][k] != DESTRUIDO) 
       {
-          if (bunker->pedaco[l][k] != DESTRUIDO)
-          {
-
             copiar_missil(&jogo->missil[i], &jogo->missil[jogo->N_MISSEIS-1]);
             desenha_missil(&jogo->missil[i]);
             finaliza_missil(&jogo->missil[jogo->N_MISSEIS-1]);
@@ -351,9 +349,9 @@ for (int i = 0; i < jogo->N_MISSEIS; i++)
             if (bunker->pedaco[l][k] == INTEIRO)
               bunker->pedaco[l][k] = AVARIADO;
             else if (bunker->pedaco[l][k] == AVARIADO)
+              bunker->pedaco[l][k] = DESTRUIDO;
 
             return ;
-          }
     
       }
 }
