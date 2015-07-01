@@ -1,20 +1,19 @@
-// O Bunker
-// Autor: GZS
 
 #ifndef BUNKER_H
 #define BUNKER_H
 
+#include "define.h"
+
 #define TAMANHO_BUNKER (8*10)
 
-enum EstadoBunker { INTEIRO, AVARIADO, DESTRUIDO };
-enum LegoBunker { VAZIO, QUADRADO, 
-                  SUPERIOR_ESQUERDO, SUPERIOR_DIREITO, 
-		  INFERIOR_ESQUERDO, INFERIOR_DIREITO };
 
 struct Bunker {
   int posicao_x, posicao_y;
-  LegoBunker desenho[8][4];
-  EstadoBunker pedaco[8][4];
+  int largura, altura;
+  ALLEGRO_BITMAP* bunker_inteiro;
+  ALLEGRO_BITMAP* bunker_fudido;  
+  //LegoBunker desenho[8][4];
+  EstadoBunker pedaco[PEDACOS_LARGURA][PEDACOS_ALTURA];
 };
 
 void inicializa_bunker( Bunker *bunker, int posicao_x, int posicao_y );

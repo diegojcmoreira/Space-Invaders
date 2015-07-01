@@ -1,14 +1,14 @@
 #ifndef Missil_H
 #define Missil_H
 
-enum SENTIDO { CIMA, BAIXO };
+#include "define.h"
 
 struct Missil
 {
 	int posicao_x;
 	int posicao_y;
-  	int DELTA_Y;
   	int altura;
+  	int velocidade;
   	int largura;
   	SENTIDO sentido;
 	ALLEGRO_BITMAP* bitmap;
@@ -22,7 +22,10 @@ void desenha_missil( Missil* missil );
 
 void move_missil( Missil* missil, SENTIDO direcao );
 
-void copy_projetil (Missil* destino, Missil* origem);
+void copiar_missil (Missil* destino, Missil* origem);
+
+void inicializa_missil_alien( Missil* missil, int posicao_x, int y, SENTIDO sentido );
+
 
 #endif
 

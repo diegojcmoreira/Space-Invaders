@@ -4,9 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define LINHAS_TROPA 3
-#define COLUNAS_TROPA 8
-#define DISTANCIA_PASSO 1
+#include "define.h"
 
 struct Alien 
 {
@@ -35,7 +33,7 @@ void inicializa_sprites_alien (Alien* alien);
 
 void finaliza_sprites_alien (Alien* alien);
 
-void move_aliens (Alien alien[COLUNAS_TROPA][LINHAS_TROPA], DIRECAO direcao);
+void move_aliens (Alien* alien, DIRECAO direcao);
 
 void move_aliens_baixo(Alien alien[COLUNAS_TROPA][LINHAS_TROPA]);
 

@@ -8,11 +8,7 @@
 #include "spaceship.h"
 #include "zbuffer.h"
 
-#define LARGURA_SPACESHIP 53
-#define ALTURA_SPACESHIP  76
 
-#define DELTA_X (-LARGURA_SPACESHIP/2)
-#define DELTA_Y (-ALTURA_SPACESHIP)
 
 
 void inicializa_spaceship( SPACESHIP* spaceship, int x, int y ) 
@@ -21,7 +17,7 @@ void inicializa_spaceship( SPACESHIP* spaceship, int x, int y )
   spaceship->posicao_y = y + DELTA_Y;
   spaceship->min_x = spaceship->posicao_x + DELTA_X;
   spaceship->max_x = spaceship->posicao_x - DELTA_X;
-  spaceship->min_y = spaceship->posicao_x + DELTA_Y;
+  spaceship->min_y = spaceship->posicao_y + DELTA_Y;
   spaceship->min_y = spaceship->posicao_y;
   
   spaceship->bitmap = al_load_bitmap("imagens/tanque3.png");

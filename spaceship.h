@@ -1,14 +1,16 @@
 #ifndef SPACESHIP_H
 #define SPACESHIP_H
 
-enum DIRECAO { ESQUERDA, DIREITA, ALIEN_CIMA, ALIEN_BAIXO };
+#include "define.h"
 
-typedef struct nave
+
+
+ struct SPACESHIP
 {
   int posicao_x, posicao_y;
   int min_x, max_x, min_y, max_y;
   ALLEGRO_BITMAP* bitmap;
-} SPACESHIP;
+};
 
 void inicializa_spaceship( SPACESHIP* spaceship, int x, int y );
 

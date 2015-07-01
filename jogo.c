@@ -9,15 +9,10 @@
 
 #include "jogo.h"
 
-#define FPS 60
-#define N_TECLAS 3
-#define LIMITE_DIREITO 630
-#define LIMITE_ESQUERDO -20
-
-
+int o = 0;
 
 void inicializa_jogo( Jogo* jogo, int largura, int altura ) 
-{
+{https://snes1990.files.wordpress.com/2013/12/super-mario-bros-1985.png?w=300&h=290
 
   jogo->tempo = 0;
   jogo->altura = altura;
@@ -39,7 +34,7 @@ void inicializa_jogo( Jogo* jogo, int largura, int altura )
 
   inicializar_imagem_allegro();
 
-  inicializar_display(jogo);
+  //inicializar_display(jogo);
 
   inicializar_fundo_allegro(jogo);
    //inicializa_buffer( &jogo->buffer, jogo->display, jogo->altura, jogo->largura, 
@@ -48,7 +43,7 @@ void inicializa_jogo( Jogo* jogo, int largura, int altura )
       
    for( int i = 0, x = (jogo->largura / 4 - TAMANHO_BUNKER) / 2; i < 4; i++, x += jogo->largura / 4 ) 
    {
-     inicializa_bunker( &jogo->bunker[i], x, 360 );
+     inicializa_bunker( &jogo->bunker[i], x, 300 );
    } 
    
    inicializa_spaceship( &jogo->spaceship, jogo->largura/2, 475 );
@@ -173,12 +168,16 @@ void move_spaceship_jogo( Jogo* jogo, DIRECAO direcao )
 void desenha_jogo( Jogo* jogo ) 
 {
   al_draw_bitmap(jogo->JANELA, 0, 0, 0); 
-  //for( int i = 0; i < N_BUNKERS; i++ )
-    //  desenha_bunker( &jogo->bunker[i] );
+  for( int i = 0; i < N_BUNKERS; i++ ) {
+      desenha_bunker( &jogo->bunker[i] );
+      colisao_missil_spaceship(jogo, &jogo->bunker[i]);}
+
 
   desenha_spaceship(&jogo->spaceship);
+  //move_aliens (&jogo->alien[3][2], ESQUERDA);
   desenha_tropa(jogo->alien);
-  automatizacao_alien(jogo->alien);
+  //move_comboio (jogo->alien, ESQUERDA);
+  //automatizacao_alien(jogo->alien);
 
   for (int i = 0; i < jogo->N_MISSEIS; i++) {
         desenha_missil(&jogo->missil[i]);
@@ -186,7 +185,7 @@ void desenha_jogo( Jogo* jogo )
         
         if (jogo->missil[i].posicao_y < 0 - jogo->missil[i].altura) {
           //if(colisao(jogo->missil[i], alien)) 
-            copy_projetil(&jogo->missil[i], &jogo->missil[jogo->N_MISSEIS-1]);
+            copiar_missil(&jogo->missil[i], &jogo->missil[jogo->N_MISSEIS-1]);
             desenha_missil(&jogo->missil[i]);
             finaliza_missil(&jogo->missil[jogo->N_MISSEIS-1]);
             jogo->N_MISSEIS--;
@@ -195,30 +194,36 @@ void desenha_jogo( Jogo* jogo )
         else 
           if (jogo->missil[i].posicao_y > 700 - jogo->missil[i].altura) {
           //if(colisao(jogo->missil[i], alien)) 
-            copy_projetil(&jogo->missil[i], &jogo->missil[jogo->N_MISSEIS-1]);
+            copiar_missil(&jogo->missil[i], &jogo->missil[jogo->N_MISSEIS-1]);
             desenha_missil(&jogo->missil[i]);
             finaliza_missil(&jogo->missil[jogo->N_MISSEIS-1]);
             jogo->N_MISSEIS--;
           
         }
+
+        /*if (colisao_missil_spaceship (&jogo->missil[i], &jogo->spaceship))
+        {
+            copiar_missil(&jogo->missil[i], &jogo->missil[jogo->N_MISSEIS-1]);
+            desenha_missil(&jogo->missil[i]);
+            finaliza_missil(&jogo->missil[jogo->N_MISSEIS-1]);
+            jogo->N_MISSEIS--;
+
+        }*/
+        /*for(int k = 0; k < COLUNAS_TROPA; k++ )
+          for(int l = 0; l < LINHAS_TROPA; l++ )
+            if (!(jogo->missil[i].posicao_y > jogo->alien[k][l].max_y  
+                  || jogo->missil[i].posicao_x > jogo->alien[k][l].max_x
+                  || jogo->missil[i].posicao_y + jogo->missil[i].altura < jogo->alien[k][l].posicao_y
+                  || jogo->missil[i].posicao_x + jogo->missil[i].largura < jogo->alien[k][l].posicao_x) && jogo->alien[k][l].sentido && jogo->missil[i].sentido == CIMA)
+            {    
+                printf("%d\n", o++);
+            }*/
+          colisao(jogo, 1);
+          colisao(jogo, 2);
+       
+            
     }     
         
-       /* if(jogo->missil[i].sentido == BAIXO)
-          if (jogo->missil[i].posicao_y < 600)
-          {
-            move_missil(&jogo->missil[i], BAIXO);
-            desenha_missil(&jogo->missil[i]);
-          }
-          //else{
-            //finaliza_missil(&jogo->missil[i]);
-            //jogo->N_MISSEIS--;
-            //printf("%d\n",jogo->N_MISSEIS );
-              
-          //}
-
-      */
-
-  
   
   if(jogo->tempo == 50)
   {
@@ -232,7 +237,7 @@ void desenha_jogo( Jogo* jogo )
       
     
     
-    printf("%d\n", jogo->N_MISSEIS );
+    //printf("%d\n", jogo->N_MISSEIS );
   
   jogo->tempo++;
 
@@ -263,18 +268,96 @@ void inicializa_timer_jogo (Jogo* jogo)
   }
 }
 
-bool colisao (Missil* missil, Alien* alien)
+void colisao (Jogo* jogo, int teste)
 {
-  //puts("ENTROU AQUI");
-  //printf("posicao_x do MISSIL:%d\nposicao_x do ALIEN%d\n",missil->posicao_x, alien->posicao_x );
-  if(missil->posicao_x > alien->max_x || missil->posicao_y > alien->max_y || missil->posicao_y + missil->altura < alien->posicao_y
-      || missil->posicao_x + missil->largura < alien->posicao_x)
-    return false;
-  
-  else
-    return true;
+  switch(teste) {
+
+    case 1:
+        for (int i = 0; i < jogo->N_MISSEIS; i++) 
+          for (int k = 0; k < COLUNAS_TROPA; k++) 
+            for (int l = 0; l < LINHAS_TROPA; l++) 
+              if ((!(jogo->missil[i].posicao_x > jogo->alien[k][l].max_x
+                    || jogo->missil[i].posicao_y > jogo->alien[k][l].max_y
+                    || jogo->missil[i].posicao_y + jogo->missil[i].altura < jogo->alien[k][l].min_y
+                    || jogo->missil[i].posicao_x + jogo->missil[i].largura < jogo->alien[k][l].min_x))
+                    && jogo->alien[k][l].vivo 
+                    && jogo->missil[i].sentido == CIMA) 
+              {
+                copiar_missil(&jogo->missil[i], &jogo->missil[jogo->N_MISSEIS-1]);
+                desenha_missil(&jogo->missil[i]);
+                finaliza_missil(&jogo->missil[jogo->N_MISSEIS-1]);
+                jogo->N_MISSEIS--;
+                jogo->alien[k][l].vivo = false;
+                return;
+              }
+            
+          
+       
+        //break;
+
+    case 2:
+        for (int i = 0; i < jogo->N_MISSEIS; i++) 
+          if (!(jogo->missil[i].posicao_y > jogo->spaceship.posicao_y + ALTURA_SPACESHIP 
+              || jogo->missil[i].posicao_x > jogo->spaceship.posicao_x + LARGURA_SPACESHIP
+              || jogo->missil[i].posicao_y + jogo->missil[i].altura < jogo->spaceship.posicao_y
+              || jogo->missil[i].posicao_x + jogo->missil[i].largura < jogo->spaceship.posicao_x) 
+              && jogo->missil[i].sentido == BAIXO)
+          {
+            copiar_missil(&jogo->missil[i], &jogo->missil[jogo->N_MISSEIS-1]);
+            desenha_missil(&jogo->missil[i]);
+            finaliza_missil(&jogo->missil[jogo->N_MISSEIS-1]);
+            jogo->N_MISSEIS--;
+            return ;
+
+          }
+           
+            
+  }
+
+  //switch(teste)
+  //{
+    
+    /*case 1:
+      for(int i = 0; i < jogo->N_MISSEIS; i++)
+        if (!(missil->posicao_y > alien->max_y  
+              || missil->posicao_x > alien->max_x
+              || missil->posicao_y + missil->altura < alien->posicao_y
+              || missil->posicao_x + missil->largura < alien->posicao_x) && alien->sentido)
+        {    
+            return true;
+            break;
+        }
+      break;    
+  }*/
 }
 
+void colisao_missil_spaceship (Jogo* jogo, Bunker* bunker) {
+
+for (int i = 0; i < jogo->N_MISSEIS; i++) 
+  for (int k = 0; k < PEDACOS_ALTURA; k++) 
+    for (int l = 0; l < PEDACOS_LARGURA; l++)
+      if ((!(jogo->missil[i].posicao_x > bunker->posicao_x + (bunker->largura/ PEDACOS_LARGURA)*l
+        || jogo->missil[i].posicao_y > bunker->posicao_y + (bunker->altura/ PEDACOS_ALTURA)*k
+        || jogo->missil[i].posicao_x + jogo->missil[i].largura < bunker->posicao_x +(bunker->largura/PEDACOS_LARGURA)*l 
+        || jogo->missil[i].posicao_y + jogo->missil[i].altura < bunker->posicao_y + (bunker->altura/ PEDACOS_ALTURA)*k))) 
+      {
+          if (bunker->pedaco[l][k] != DESTRUIDO)
+          {
+
+            copiar_missil(&jogo->missil[i], &jogo->missil[jogo->N_MISSEIS-1]);
+            desenha_missil(&jogo->missil[i]);
+            finaliza_missil(&jogo->missil[jogo->N_MISSEIS-1]);
+            jogo->N_MISSEIS--;
+            if (bunker->pedaco[l][k] == INTEIRO)
+              bunker->pedaco[l][k] = AVARIADO;
+            else if (bunker->pedaco[l][k] == AVARIADO)
+
+            return ;
+          }
+    
+      }
+}
+  
 void menu(Jogo* jogo)
 {
   while(!jogo->pause)

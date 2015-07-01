@@ -9,9 +9,9 @@
 #include "missil.h"
 #include "alien.h"
 #include "zbuffer.h"
+#include "define.h"
 
-#define ALTURA_NAVE 40
-#define LARGURA_NAVE 40
+
 
 void inicializa_alien (Alien* alien, int posicao_x, int posicao_y) {
 	alien->posicao_x = posicao_x;
@@ -25,15 +25,18 @@ void inicializa_alien (Alien* alien, int posicao_x, int posicao_y) {
 	inicializa_sprites_alien (alien);
 	alien->altura = al_get_bitmap_height(alien->IMAGEM);
 	alien->delta_x = al_get_bitmap_width(alien->IMAGEM);
-	alien->max_y = posicao_y + alien->altura;
-	alien->min_y = posicao_y - alien->altura;
-	alien->min_x = alien->posicao_x - alien->delta_x; 
-	alien->max_x = alien->posicao_x + alien->delta_x;
-	puts("alien->max_y = posicao_y + alien->altura;");
+	alien->max_y = posicao_y + (alien->altura);
+	alien->min_y = posicao_y - (alien->altura);
+	alien->min_x = alien->posicao_x - (alien->delta_x); 
+	alien->max_x = alien->posicao_x + (alien->delta_x);
+	/*puts("alien->max_y = posicao_y + alien->altura;");
 	printf("max_y = %d\n", alien->max_y );
 	printf("alien altura = %d\n", alien->altura );
 	printf("alien posicao_y = %d\n", alien->posicao_y);
-	printf("alien altura + posicao_y = %d\n", alien->posicao_y + alien->altura );
+	printf("alien altura + posicao_y = %d\n", alien->posicao_y + alien->altura );*/
+	printf("max_y = %d\n", alien->max_x );
+	printf("alien posicao_y = %d\n", alien->posicao_x);
+	//printf("max_y = %d\n", alien->po );
 
 
 	
@@ -44,7 +47,7 @@ void inicializa_tropa (Alien alien[COLUNAS_TROPA][LINHAS_TROPA], int posicao_x, 
 		for (int j = 0; j < LINHAS_TROPA; j++)
 			inicializa_alien (&alien[i][j], posicao_x + i * (LARGURA_NAVE + LARGURA_NAVE/2),
 									posicao_y + j * (ALTURA_NAVE + ALTURA_NAVE/2) ); 
-	printf("posição x no começo:%d\n", alien[0][0].posicao_x );
+	//printf("posição x no começo:%d\n", alien[0][0].posicao_x );
 
 }
 
@@ -101,13 +104,13 @@ void move_comboio (Alien alien[COLUNAS_TROPA][LINHAS_TROPA], DIRECAO direcao)
 {
 
 	if (direcao == ESQUERDA)
-		for(int i = 0; i < COLUNAS_TROPA; i++ )
-			for(int j = 0; j < LINHAS_TROPA; j++ )
+		for(int i = 0; i < COLUNAS_TROPA ; i++ )
+			for(int j = 0; j < LINHAS_TROPA ; j++ )
 				move_aliens(&alien[i][j], direcao);
 	
 	if (direcao == DIREITA)
-		for(int i = 0; i < COLUNAS_TROPA; i++ )
-			for(int j = 0; j < LINHAS_TROPA; j++ )
+		for(int i = 0; i < COLUNAS_TROPA ; i++ )
+			for(int j = 0; j < LINHAS_TROPA ; j++ )
 				move_aliens(&alien[i][j], direcao);
 
 }
@@ -131,7 +134,7 @@ void automatizacao_alien( Alien alien[COLUNAS_TROPA][LINHAS_TROPA])
 	  		inverte_direcao(alien, DIREITA);
 	
 	if(alien[0][0].direcao_atual == DIREITA)
-	  	if (alien[LINHAS_TROPA -1 ][LINHAS_TROPA - 1].posicao_x < 630)
+	  	if (alien[LINHAS_TROPA - 1 ][LINHAS_TROPA - 1].posicao_x < 630)
 	  	{
 			move_comboio (alien, DIREITA);
 	    	desenha_tropa(alien); 
@@ -163,8 +166,8 @@ void atira_comboio (Alien alien[COLUNAS_TROPA][LINHAS_TROPA], Missil* missil)
 
     while (!alien[quem_atira_x][quem_atira_y].vivo && quem_atira_y > 0)
         quem_atira_y--;
-    puts("ENTROU NO ATIRA TROPA");
+    //puts("ENTROU NO ATIRA TROPA");
 
-    inicializa_missil (missil, alien[quem_atira_x][quem_atira_y].posicao_x + alien[quem_atira_x][quem_atira_y].delta_x,
+    inicializa_missil_alien(missil, alien[quem_atira_x][quem_atira_y].posicao_x + alien[quem_atira_x][quem_atira_y].delta_x,
                                 alien[quem_atira_x][quem_atira_y].posicao_y + alien[0][0].altura, BAIXO); 
 }

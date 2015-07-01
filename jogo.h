@@ -6,9 +6,7 @@
 #include "missil.h"
 #include "alien.h"
 #include "zbuffer.h"
-
-#define DISPLAY_WIDTH 640
-#define DISPLAY_HEIGHT 480
+#include "define.h"
 
 
 enum TECLA { TECLA_ESQUERDA, TECLA_DIREITA, TECLA_ESC };
@@ -49,7 +47,9 @@ void inicializa_timer_jogo (Jogo* jogo);
 
 void inicializa_eventos (Jogo* jogo);
 
-bool colisao(Missil* missil, Alien* alien);
+void colisao (Jogo* jogo );
+
+void colisao_missil_spaceship (Jogo* jogo, Bunker* bunker);
 
 void menu(Jogo* jogo);
 
@@ -74,6 +74,8 @@ void inicializar_fundo(Jogo* jogo);
 void inicializar_tela_inicial(Jogo* jogo);
 
 void tela_inicial (Jogo* jogo);
+
+void colisao (Jogo* jogo, int teste);
 
 
 //void atirar(Jogo* jogo, SENTIDO sentido);
