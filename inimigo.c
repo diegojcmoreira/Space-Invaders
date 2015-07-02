@@ -171,6 +171,14 @@ void atira_comboio (Inimigo inimigo[COLUNAS_TROPA][LINHAS_TROPA], Missil* missil
     int quem_atira_x = rand() % COLUNAS_TROPA;
     int quem_atira_y = LINHAS_TROPA-1;
 
+ 
+if(!(inimigo_vivo(inimigo)))
+{
+	puts("VENCEDOR");
+	return;
+}
+
+
     while (!inimigo[quem_atira_x][0].vivo)
         quem_atira_x = (quem_atira_x+1) % COLUNAS_TROPA;
 
@@ -179,4 +187,13 @@ void atira_comboio (Inimigo inimigo[COLUNAS_TROPA][LINHAS_TROPA], Missil* missil
 
     inicializa_missil_inimigo(missil, inimigo[quem_atira_x][quem_atira_y].posicao_x + inimigo[quem_atira_x][quem_atira_y].largura,
                                 inimigo[quem_atira_x][quem_atira_y].posicao_y + inimigo[0][0].altura, BAIXO); 
+}
+
+bool inimigo_vivo(Inimigo inimigo[COLUNAS_TROPA][LINHAS_TROPA])
+{
+	for (int i = 0; i < COLUNAS_TROPA; i++)
+		for (int j = 0; j < LINHAS_TROPA; j++)
+			if(inimigo[i][j].vivo)
+				return true;
+
 }
