@@ -38,7 +38,8 @@ void desenha_bunker( Bunker* bunker )
   for (int i = 0; i < PEDACOS_LARGURA; i++) 
     for (int j = 0; j < PEDACOS_ALTURA; j++) 
       if (bunker->pedaco[i][j] == INTEIRO) 
-        al_draw_bitmap_region(bunker->bunker_inteiro,
+
+          al_draw_bitmap_region(bunker->bunker_inteiro,
                      (bunker->largura/ PEDACOS_LARGURA)*i,
                      (bunker->altura/ PEDACOS_ALTURA)*j,
                      (bunker->largura/ PEDACOS_LARGURA),
@@ -60,15 +61,3 @@ void desenha_bunker( Bunker* bunker )
                      0);
       
 }
-  
-/*void desenha_bunker( Bunker* bunker ) {
-  for( int i = 0, x = bunker->posicao_x; 
-       i < 8; 
-       i++, x += TAMANHO_BUNKER / 8 )
-    for( int j = 0, y = bunker->posicao_y; 
-         j < 4; 
-         j++, y += TAMANHO_BUNKER / 8 ) {
-             
-      desenha_pedaco_bunker( x, y, bunker->desenho[i][j], bunker->pedaco[i][j] );     
-    }
-}*/

@@ -22,4 +22,6 @@ void finaliza_bunker( Bunker *bunker );
 
 void desenha_bunker( Bunker* bunker );
 
+void desenha_imagem_bunker (Bunker* bunker);
+
 #endif

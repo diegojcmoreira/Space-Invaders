@@ -7,11 +7,10 @@
 #include "spaceship.h"
 #include "bunker.h"
 #include "missil.h"
-#include "alien.h"
+#include "inimigo.h"
+#include "define.h"
 
-#define MAX_MISSEIS 100
-#define MAX_DESTROYERS 5
-#define N_BUNKERS 4
+
 
 struct ZBuffer 
 {
@@ -22,13 +21,13 @@ struct ZBuffer
   Bunker* bunker; 		// 1
   SPACESHIP* spaceship;
         		// 2
-  Alien alien[COLUNAS_TROPA][LINHAS_TROPA];	// 3
-  int n_misseis;
+  //Inimigo Inimigo[COLUNAS_TROPA][LINHAS_TROPA];	// 3
+  int n_Iisseis;
   Missil *missil[MAX_MISSEIS];	// 4 
 } ;
 
 void inicializa_zbuffer( ZBuffer* z, ALLEGRO_DISPLAY *display,
-       int altura, int largura, Bunker bunker[N_BUNKERS], SPACESHIP* spaceship, Alien alien[COLUNAS_TROPA][LINHAS_TROPA] );
+       int altura, int largura, Bunker bunker[N_BUNKERS], SPACESHIP* spaceship, Inimigo Inimigo[COLUNAS_TROPA][LINHAS_TROPA] );
 
 void finaliza_zbuffer( ZBuffer*z );
 

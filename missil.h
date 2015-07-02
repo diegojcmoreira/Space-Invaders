@@ -24,7 +24,7 @@ void move_missil( Missil* missil, SENTIDO direcao );
 
 void copiar_missil (Missil* destino, Missil* origem);
 
-void inicializa_missil_alien( Missil* missil, int posicao_x, int y, SENTIDO sentido );
+void inicializa_missil_inimigo( Missil* missil, int posicao_x, int y, SENTIDO sentido );
 
 
 #endif

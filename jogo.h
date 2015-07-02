@@ -1,12 +1,17 @@
 #ifndef JOGO_H
 #define JOGO_H
 
+
+
 #include "bunker.h"
+#include "placar.h"
 #include "spaceship.h"
 #include "missil.h"
-#include "alien.h"
+#include "inimigo.h"
 #include "zbuffer.h"
 #include "define.h"
+#include "vidas.h"
+
 
 
 enum TECLA { TECLA_ESQUERDA, TECLA_DIREITA, TECLA_ESC };
@@ -16,21 +21,26 @@ struct Jogo
 {
  
   int largura, altura;
+  Vidas vidas;
+  Placar placar;
   int N_MISSEIS;
   int N_DESTROYERS;
+  int vida;
   ALLEGRO_DISPLAY *display;
   ALLEGRO_EVENT_QUEUE *fila_eventos;
   Bunker bunker[N_BUNKERS];
   SPACESHIP spaceship;
   ALLEGRO_BITMAP* JANELA;
+  ALLEGRO_BITMAP* vida_imagem;
   ALLEGRO_TIMER* timer;
   ALLEGRO_BITMAP* TELA_INICIAL;
   Missil missil[MAX_MISSEIS];
-  Alien alien[COLUNAS_TROPA][LINHAS_TROPA];
+  Inimigo inimigo[COLUNAS_TROPA][LINHAS_TROPA];
   ZBuffer zbuffer;
   bool esquerda;
   bool pause;
   int tempo;
+  
 };
 
 void inicializa_jogo( Jogo* jogo, int largura, int altura);
@@ -52,6 +62,8 @@ void colisao (Jogo* jogo );
 void colisao_missil_spaceship (Jogo* jogo, Bunker* bunker);
 
 void menu(Jogo* jogo);
+
+void desenha_fundo(Jogo* jogo);
 
 void inicializar_fundo_allegro(Jogo* jogo);
 

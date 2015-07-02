@@ -31,11 +31,11 @@ void inicializa_missil( Missil* missil, int posicao_x, int y, SENTIDO sentido )
   //puts("SAIU DE inicializa_missil");
 }
 
-void inicializa_missil_alien( Missil* missil, int posicao_x, int y, SENTIDO sentido ) 
+void inicializa_missil_inimigo( Missil* missil, int posicao_x, int y, SENTIDO sentido ) 
 {
   missil->posicao_x = posicao_x;
   missil->posicao_y = y;
-  missil->velocidade = VELOCIDADE_MISSIL_ALIEN;
+  missil->velocidade = VELOCIDADE_MISSIL_INIMIGO;
   missil->bitmap = al_load_bitmap("imagens/missil.jpg");
   missil->sentido = sentido;
 

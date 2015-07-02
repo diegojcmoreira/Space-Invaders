@@ -1,19 +1,16 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <allegro5/allegro_font.h>
-#include <allegro5/allegro_ttf.h>
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_primitives.h>
+#include <allegro5/allegro_font.h>
+#include <allegro5/allegro_ttf.h>
 #include <allegro5/allegro_image.h>
 #include <stdbool.h>
 
 #include "jogo.h"
 
-int o = 0;
-
 void inicializa_jogo( Jogo* jogo, int largura, int altura ) 
-{https://snes1990.files.wordpress.com/2013/12/super-mario-bros-1985.png?w=300&h=290
-
+{
   jogo->tempo = 0;
   jogo->altura = altura;
   jogo->largura = largura;
@@ -21,6 +18,7 @@ void inicializa_jogo( Jogo* jogo, int largura, int altura )
 
   jogo->N_MISSEIS = 0;
   jogo->esquerda = true;
+
   
   inicializar_allegro();
 
@@ -34,23 +32,32 @@ void inicializa_jogo( Jogo* jogo, int largura, int altura )
 
   inicializar_imagem_allegro();
 
-  //inicializar_display(jogo);
-
   inicializar_fundo_allegro(jogo);
    //inicializa_buffer( &jogo->buffer, jogo->display, jogo->altura, jogo->largura, 
      //                  jogo->bunker, &jogo->spaceship );
 
-      
-   for( int i = 0, x = (jogo->largura / 4 - TAMANHO_BUNKER) / 2; i < 4; i++, x += jogo->largura / 4 ) 
-   {
-     inicializa_bunker( &jogo->bunker[i], x, 300 );
-   } 
-   
-   inicializa_spaceship( &jogo->spaceship, jogo->largura/2, 475 );
-   
-   inicializa_eventos(jogo);
 
-   inicializa_tropa(jogo->alien, 100, 10);
+
+  inicializa_spaceship( &jogo->spaceship, jogo->largura/2, DISPLAY_HEIGHT - 15 );
+
+      
+  for( int i = 0, x = (jogo->largura / N_BUNKERS - TAMANHO_BUNKER) / 2; i < N_BUNKERS; i++, x += jogo->largura / N_BUNKERS ) 
+  {
+    inicializa_bunker( &jogo->bunker[i], x, jogo->spaceship.posicao_y - 120 );
+  } 
+ 
+ 
+  inicializa_eventos(jogo);
+
+  inicializa_placar(&jogo->placar);
+
+  inicializa_tropa(jogo->inimigo, 200, POSICAO_Y_VIDA + 40);
+
+  inicializa_vidas(&jogo->vidas);
+
+
+
+  
 
    
 }
@@ -119,6 +126,9 @@ void inicio(Jogo* jogo)
                 case ALLEGRO_KEY_Q: 
                   saida = true;
                   break;
+                case ALLEGRO_KEY_I:
+                  break;
+
             }
       }
       
@@ -148,14 +158,15 @@ void move_spaceship_jogo( Jogo* jogo, DIRECAO direcao )
   switch( direcao ) 
   {
     case ESQUERDA :
-      if( jogo->spaceship.min_x > LIMITE_ESQUERDO ) 
+
+      if( jogo->spaceship.min_x > 0 - (jogo->spaceship.largura_spaceship/2)) 
       {
         move_spaceship( &jogo->spaceship, -10, 0 );
       }  
       break;
 
     case DIREITA :
-      if( jogo->spaceship.max_x < LIMITE_DIREITO ) 
+      if( jogo->spaceship.max_x < DISPLAY_WIDTH - (jogo->spaceship.largura_spaceship/2) ) 
       {
         move_spaceship( &jogo->spaceship, 10, 0 );
 
@@ -167,24 +178,26 @@ void move_spaceship_jogo( Jogo* jogo, DIRECAO direcao )
 
 void desenha_jogo( Jogo* jogo ) 
 {
-  al_draw_bitmap(jogo->JANELA, 0, 0, 0); 
+  desenha_fundo(jogo);
+
+
   for( int i = 0; i < N_BUNKERS; i++ ) {
       desenha_bunker( &jogo->bunker[i] );
-      colisao_missil_spaceship(jogo, &jogo->bunker[i]);}
+      colisao_missil_spaceship(jogo, &jogo->bunker[i]);
+    }
+
+
 
 
   desenha_spaceship(&jogo->spaceship);
-  //move_aliens (&jogo->alien[3][2], ESQUERDA);
-  desenha_tropa(jogo->alien);
-  //move_comboio (jogo->alien, ESQUERDA);
-  //automatizacao_alien(jogo->alien);
+  desenha_tropa(jogo->inimigo);
+  automatizacao_inimigo(jogo->inimigo);
 
   for (int i = 0; i < jogo->N_MISSEIS; i++) {
         desenha_missil(&jogo->missil[i]);
         move_missil(&jogo->missil[i], jogo->missil[i].sentido);
         
         if (jogo->missil[i].posicao_y < 0 - jogo->missil[i].altura) {
-          //if(colisao(jogo->missil[i], alien)) 
             copiar_missil(&jogo->missil[i], &jogo->missil[jogo->N_MISSEIS-1]);
             desenha_missil(&jogo->missil[i]);
             finaliza_missil(&jogo->missil[jogo->N_MISSEIS-1]);
@@ -193,7 +206,6 @@ void desenha_jogo( Jogo* jogo )
         }
         else 
           if (jogo->missil[i].posicao_y > 700 - jogo->missil[i].altura) {
-          //if(colisao(jogo->missil[i], alien)) 
             copiar_missil(&jogo->missil[i], &jogo->missil[jogo->N_MISSEIS-1]);
             desenha_missil(&jogo->missil[i]);
             finaliza_missil(&jogo->missil[jogo->N_MISSEIS-1]);
@@ -211,10 +223,10 @@ void desenha_jogo( Jogo* jogo )
         }*/
         /*for(int k = 0; k < COLUNAS_TROPA; k++ )
           for(int l = 0; l < LINHAS_TROPA; l++ )
-            if (!(jogo->missil[i].posicao_y > jogo->alien[k][l].max_y  
-                  || jogo->missil[i].posicao_x > jogo->alien[k][l].max_x
-                  || jogo->missil[i].posicao_y + jogo->missil[i].altura < jogo->alien[k][l].posicao_y
-                  || jogo->missil[i].posicao_x + jogo->missil[i].largura < jogo->alien[k][l].posicao_x) && jogo->alien[k][l].sentido && jogo->missil[i].sentido == CIMA)
+            if (!(jogo->missil[i].posicao_y > jogo->inimigo[k][l].max_y  
+                  || jogo->missil[i].posicao_x > jogo->inimigo[k][l].max_x
+                  || jogo->missil[i].posicao_y + jogo->missil[i].altura < jogo->inimigo[k][l].posicao_y
+                  || jogo->missil[i].posicao_x + jogo->missil[i].largura < jogo->inimigo[k][l].posicao_x) && jogo->inimigo[k][l].sentido && jogo->missil[i].sentido == CIMA)
             {    
                 printf("%d\n", o++);
             }*/
@@ -229,7 +241,7 @@ void desenha_jogo( Jogo* jogo )
   {
   
       
-      atira_comboio(jogo->alien, &jogo->missil[jogo->N_MISSEIS]);
+      atira_comboio(jogo->inimigo, &jogo->missil[jogo->N_MISSEIS]);
       jogo->N_MISSEIS++;
       jogo->tempo = 0;
   }
@@ -241,6 +253,8 @@ void desenha_jogo( Jogo* jogo )
   
   jogo->tempo++;
 
+  desenha_vidas(&jogo->vidas);
+  desenha_placar(&jogo-> placar);
   al_flip_display();
 }
 
@@ -276,18 +290,19 @@ void colisao (Jogo* jogo, int teste)
         for (int i = 0; i < jogo->N_MISSEIS; i++) 
           for (int k = 0; k < COLUNAS_TROPA; k++) 
             for (int l = 0; l < LINHAS_TROPA; l++) 
-              if ((!(jogo->missil[i].posicao_x > jogo->alien[k][l].max_x
-                    || jogo->missil[i].posicao_y > jogo->alien[k][l].max_y
-                    || jogo->missil[i].posicao_y + jogo->missil[i].altura < jogo->alien[k][l].min_y
-                    || jogo->missil[i].posicao_x + jogo->missil[i].largura < jogo->alien[k][l].min_x))
-                    && jogo->alien[k][l].vivo 
+              if ((!(jogo->missil[i].posicao_x > jogo->inimigo[k][l].max_x
+                    || jogo->missil[i].posicao_y > jogo->inimigo[k][l].max_y
+                    || jogo->missil[i].posicao_y + jogo->missil[i].altura < jogo->inimigo[k][l].posicao_y
+                    || jogo->missil[i].posicao_x + jogo->missil[i].largura < jogo->inimigo[k][l].posicao_x))
+                    && jogo->inimigo[k][l].vivo 
                     && jogo->missil[i].sentido == CIMA) 
               {
                 copiar_missil(&jogo->missil[i], &jogo->missil[jogo->N_MISSEIS-1]);
                 desenha_missil(&jogo->missil[i]);
                 finaliza_missil(&jogo->missil[jogo->N_MISSEIS-1]);
                 jogo->N_MISSEIS--;
-                jogo->alien[k][l].vivo = false;
+                jogo->inimigo[k][l].vivo = false;
+                jogo->placar.pontuacao += 100;
                 return;
               }
             
@@ -307,6 +322,7 @@ void colisao (Jogo* jogo, int teste)
             desenha_missil(&jogo->missil[i]);
             finaliza_missil(&jogo->missil[jogo->N_MISSEIS-1]);
             jogo->N_MISSEIS--;
+            jogo->vidas.chances -= 1;
             return ;
 
           }
@@ -319,10 +335,10 @@ void colisao (Jogo* jogo, int teste)
     
     /*case 1:
       for(int i = 0; i < jogo->N_MISSEIS; i++)
-        if (!(missil->posicao_y > alien->max_y  
-              || missil->posicao_x > alien->max_x
-              || missil->posicao_y + missil->altura < alien->posicao_y
-              || missil->posicao_x + missil->largura < alien->posicao_x) && alien->sentido)
+        if (!(missil->posicao_y > inimigo->max_y  
+              || missil->posicao_x > inimigo->max_x
+              || missil->posicao_y + missil->altura < inimigo->posicao_y
+              || missil->posicao_x + missil->largura < inimigo->posicao_x) && inimigo->sentido)
         {    
             return true;
             break;
@@ -336,8 +352,8 @@ void colisao_missil_spaceship (Jogo* jogo, Bunker* bunker) {
 for (int i = 0; i < jogo->N_MISSEIS; i++) 
   for (int k = 0; k < PEDACOS_ALTURA; k++) 
     for (int l = 0; l < PEDACOS_LARGURA; l++)
-      if ((!(jogo->missil[i].posicao_x > bunker->posicao_x + (bunker->largura/ PEDACOS_LARGURA)*l
-        || jogo->missil[i].posicao_y > bunker->posicao_y + (bunker->altura/ PEDACOS_ALTURA)*k
+      if ((!(jogo->missil[i].posicao_x > bunker->posicao_x + (bunker->largura/ PEDACOS_LARGURA)*(l+1)
+        || jogo->missil[i].posicao_y > bunker->posicao_y + (bunker->altura/ PEDACOS_ALTURA)*(k+1)
         || jogo->missil[i].posicao_x + jogo->missil[i].largura < bunker->posicao_x +(bunker->largura/PEDACOS_LARGURA)*l 
         || jogo->missil[i].posicao_y + jogo->missil[i].altura < bunker->posicao_y + (bunker->altura/ PEDACOS_ALTURA)*k))
         && bunker->pedaco[l][k] != DESTRUIDO) 
@@ -453,7 +469,7 @@ void inicializar_display(Jogo* jogo)
 
 void inicializar_fundo_allegro(Jogo* jogo)
 {
-    jogo->JANELA = al_load_bitmap("imagens/espaco_sideral.jpg");
+    jogo->JANELA = al_load_bitmap("imagens/fundo2.jpg");
     if (!jogo->JANELA)
     {
        fprintf(stderr, "Falha ao carregar o arquivo de imagem.\n");
@@ -487,7 +503,8 @@ void inicializar_todo_allegro() {
   
 }
 
-void inicializar_fundo(Jogo* jogo) {
+void inicializar_fundo(Jogo* jogo) 
+{
 
 
   inicializar_display(jogo);
@@ -496,6 +513,15 @@ void inicializar_fundo(Jogo* jogo) {
 
   inicializar_tela_inicial(jogo);
 
+}
+
+void desenha_fundo(Jogo* jogo)
+{
+  
+  al_draw_scaled_bitmap(jogo->JANELA,
+   0, 0, al_get_bitmap_width(jogo->JANELA), al_get_bitmap_height(jogo->JANELA),
+   0, 0, DISPLAY_WIDTH, DISPLAY_HEIGHT, 0 );
+    
 }
 
 void tela_inicial (Jogo* jogo)

@@ -10,7 +10,7 @@
 
 
   void inicializa_zbuffer( ZBuffer* z, ALLEGRO_DISPLAY *display,
-       int altura, int largura, Bunker bunker[N_BUNKERS], SPACESHIP* spaceship, Alien alien[COLUNAS_TROPA][LINHAS_TROPA] )
+       int altura, int largura, Bunker bunker[N_BUNKERS], SPACESHIP* spaceship, Inimigo inimigo[COLUNAS_TROPA][LINHAS_TROPA] )
   {
     z->display = display;
     z->buffer = al_create_bitmap( largura, altura );
@@ -25,7 +25,7 @@
     z->bunker = bunker;
     z->spaceship = spaceship;         
     
-    //z->alien = alien;
+    //z->inimigo = inimigo;
     // z->n_misseis = n_misseis;
     // z->missel = m; 
   }
@@ -45,7 +45,7 @@
       //desenha_bunker( &z->bunker[i] );
     
     desenha_spaceship( z->spaceship );
-    //desenha_tropa(z->alien);
+    //desenha_tropa(z->inimigo);
 
     al_set_target_backbuffer( z->display );
     al_draw_bitmap( z->buffer, 0, 0, 0 );

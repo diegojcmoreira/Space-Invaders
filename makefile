@@ -1,11 +1,13 @@
-all: jogo.o spaceship.o bunker.o missil.o alien.o zbuffer.o
-	g++ -g main.c jogo.o bunker.o missil.o spaceship.o alien.o zbuffer.o -o teste -lallegro -lallegro_dialog -lallegro_image -lallegro_primitives -lallegro_font -lallegro_ttf -lallegro_ttf
+all: jogo.o spaceship.o bunker.o missil.o inimigo.o zbuffer.o placar.o vidas.o
+	g++ -g main.c jogo.o bunker.o missil.o placar.o vidas.o spaceship.o inimigo.o zbuffer.o -o teste -lallegro -lallegro_dialog -lallegro_image -lallegro_primitives -lallegro_font -lallegro_ttf -lallegro_ttf
 	rm jogo.o
 	rm spaceship.o
 	rm bunker.o
 	rm missil.o
-	rm alien.o
+	rm inimigo.o
 	rm zbuffer.o
+	rm placar.o
+	rm vidas.o
 
 jogo.o:
 	g++ -c jogo.c
@@ -15,9 +17,13 @@ bunker.o:
 	g++ -c bunker.c
 missil.o:
 	g++ -c missil.c
-alien.o:
-	g++ -c alien.c
+inimigo.o:
+	g++ -c inimigo.c
 zbuffer.o:
 	g++ -c zbuffer.c
+placar.o:
+	g++ -c placar.c
+vidas.o:
+	g++ -c vidas.c
 
 
