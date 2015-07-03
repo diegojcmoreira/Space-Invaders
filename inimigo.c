@@ -129,6 +129,7 @@ void move_comboio_baixo(Inimigo inimigo[COLUNAS_TROPA][LINHAS_TROPA])
 
 void automatizacao_inimigo( Inimigo inimigo[COLUNAS_TROPA][LINHAS_TROPA])
 {
+
 	if(inimigo[0][0].direcao_atual == ESQUERDA)
 		if (inimigo[0][0].posicao_x > 0 )
 	  	{

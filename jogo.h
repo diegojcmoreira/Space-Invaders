@@ -25,7 +25,6 @@ struct Jogo
   Vidas vidas;
   Placar placar;
   int N_MISSEIS;
-  int vida;
   int misseis_ativos_spaceship;
   int ativar_death_star;
   ALLEGRO_DISPLAY *display;
@@ -100,5 +99,11 @@ void inicializar_fontes_menu_pause (Jogo* jogo);
 void perdendo_para_maquina(Jogo* jogo);
 
 void winner (Jogo* jogo);
+
+void invadiu_base(Jogo* jogo);
+
+void teste_limites (Jogo* jogo);
+
+
 
 #endif

@@ -147,7 +147,21 @@ void inicio(Jogo* jogo)
           move_spaceship_jogo( jogo, DIREITA );
         if( tecla[TECLA_ESQUERDA] )   
           move_spaceship_jogo( jogo, ESQUERDA );
-       desenha_jogo(jogo);
+
+        colisao(jogo, ALIEN);
+        colisao(jogo, SPACESHIP_);
+        colisao(jogo, BUNKER);
+        colisao_death_star(jogo);
+        invadiu_base(jogo);
+
+
+        
+
+        
+        if(!inimigo_vivo(jogo->inimigo))
+          winner (jogo);   
+        
+        desenha_jogo(jogo);
   }
 }
 
@@ -201,10 +215,40 @@ void desenha_jogo( Jogo* jogo )
   for( int i = 0; i < N_BUNKERS; i++ )
       desenha_bunker( &jogo->bunker[i] );
 
+  if(jogo->death_star.movimento_death_star)
+          automatiza_death_star(&jogo->death_star);
+
   desenha_spaceship(&jogo->spaceship);
   desenha_tropa(jogo->inimigo);
   automatizacao_inimigo(jogo->inimigo);
+  teste_limites (jogo);
 
+  desenha_vidas(&jogo->vidas);
+  desenha_placar(&jogo-> placar);  
+  
+
+  al_flip_display();
+}
+
+void inicializa_eventos (Jogo* jogo) 
+{
+  jogo->fila_eventos = al_create_event_queue();
+  jogo->apos_perder = al_create_event_queue();
+    if (!(jogo->fila_eventos||jogo->apos_perder))
+    {
+        fprintf(stderr, "Falha ao criar fila de eventos.\n");
+        exit(-1);
+    }
+
+  al_register_event_source(jogo->fila_eventos, al_get_keyboard_event_source());
+  al_register_event_source(jogo->fila_eventos, al_get_display_event_source(jogo->display));
+  al_register_event_source(jogo->fila_eventos, al_get_timer_event_source(jogo->timer));
+  al_register_event_source(jogo->apos_perder, al_get_keyboard_event_source());
+
+}
+
+void teste_limites (Jogo* jogo)
+{
   for (int i = 0; i < jogo->N_MISSEIS; i++) {
         desenha_missil(&jogo->missil[i]);
         move_missil(&jogo->missil[i], jogo->missil[i].sentido);
@@ -227,39 +271,6 @@ void desenha_jogo( Jogo* jogo )
         }
           
   }
-  if(jogo->death_star.movimento_death_star)
-    automatiza_death_star(&jogo->death_star);
-
-  desenha_vidas(&jogo->vidas);
-  desenha_placar(&jogo-> placar);
-
-  colisao(jogo, ALIEN);
-  colisao(jogo, SPACESHIP_);
-  colisao(jogo, BUNKER);
-  colisao_death_star(jogo);
-  if(!inimigo_vivo(jogo->inimigo))
-    winner (jogo);   
-  
-  
-
-  al_flip_display();
-}
-
-void inicializa_eventos (Jogo* jogo) 
-{
-  jogo->fila_eventos = al_create_event_queue();
-  jogo->apos_perder = al_create_event_queue();
-    if (!(jogo->fila_eventos||jogo->apos_perder))
-    {
-        fprintf(stderr, "Falha ao criar fila de eventos.\n");
-        exit(-1);
-    }
-
-  al_register_event_source(jogo->fila_eventos, al_get_keyboard_event_source());
-  al_register_event_source(jogo->fila_eventos, al_get_display_event_source(jogo->display));
-  al_register_event_source(jogo->fila_eventos, al_get_timer_event_source(jogo->timer));
-  al_register_event_source(jogo->apos_perder, al_get_keyboard_event_source());
-
 }
 
 void inicializa_timer_jogo (Jogo* jogo) 
@@ -403,14 +414,6 @@ void colisao_death_star(Jogo* jogo)
             jogo->placar.pontuacao += DEATH_STAR_PONTOS;
             reinicializar_death_star (&jogo->death_star);
           }
-}
-  
-void menu(Jogo* jogo)
-{
-  while(!jogo->saida)
-  {
-    al_clear_to_color(al_map_rgba(0,0,0,100));
-  }
 }
 
 void inicializar_allegro()
@@ -649,4 +652,21 @@ void winner (Jogo* jogo)
 
   al_destroy_font(fonte);
   al_destroy_bitmap(img);
+}
+
+void invadiu_base(Jogo* jogo)
+{
+  for (int i = 0; i < COLUNAS_TROPA ; i++)
+    for (int j = 0; j < LINHAS_TROPA ; j++)
+      if ((jogo->inimigo[i][j].vivo) && (jogo->inimigo[i][j].max_y > jogo->bunker[0].posicao_y) )
+      {
+        al_draw_text(jogo->fonte , 
+            al_map_rgb(255,255,255), 
+            DISPLAY_WIDTH/2, 
+            (DISPLAY_HEIGHT/2)-70, ALLEGRO_ALIGN_CENTER, "GAME OVER");
+          
+            al_flip_display();
+            al_rest(3);
+            jogo->saida = true;
+      }
 }

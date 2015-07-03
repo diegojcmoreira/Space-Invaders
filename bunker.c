@@ -7,13 +7,13 @@
 
 void inicializa_bunker (Bunker* bunker, int posicao_x, int posicao_y) {
 
-  bunker->bunker_inteiro = al_load_bitmap("imagens/bunker2.png");
+  bunker->bunker_inteiro = al_load_bitmap("imagens/bunker_960x600.png");
   if (bunker->bunker_inteiro == NULL) {
     fprintf(stderr, "Falha ao carregar o arquivo de imagem.\n");
        exit(-1);
   }
 
-  bunker->bunker_fudido = al_load_bitmap("imagens/bunker2_fudido.png");
+  bunker->bunker_fudido = al_load_bitmap("imagens/bunker_fudido_960x600.png");
   if (bunker->bunker_fudido == NULL) {
    fprintf(stderr, "Falha ao carregar o arquivo de imagem.\n");
        exit(-1);

@@ -60,9 +60,9 @@ void finaliza_missil( Missil* missil )
 
 void desenha_missil( Missil* missil ) 
 {
-    al_draw_bitmap( missil->bitmap, 
-      missil->posicao_x , 
-      missil->posicao_y , 0);
+    al_draw_scaled_bitmap(missil->bitmap,
+   0, 0, al_get_bitmap_width(missil->bitmap), al_get_bitmap_height(missil->bitmap),
+   missil->posicao_x, missil->posicao_y, DISPLAY_WIDTH/200, DISPLAY_HEIGHT/26 , 0 );
 }
 
 void move_missil( Missil* missil, SENTIDO sentido )
