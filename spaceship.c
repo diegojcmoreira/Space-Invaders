@@ -6,7 +6,6 @@
 #include <allegro5/allegro_image.h>
 
 #include "spaceship.h"
-#include "zbuffer.h"
 
 
 

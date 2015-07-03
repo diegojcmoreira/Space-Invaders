@@ -8,7 +8,6 @@
 #include "spaceship.h"
 #include "missil.h"
 #include "inimigo.h"
-#include "zbuffer.h"
 #include "define.h"
 
 

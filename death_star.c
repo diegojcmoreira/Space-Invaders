@@ -8,7 +8,6 @@
 #include "spaceship.h"
 #include "missil.h"
 #include "death_star.h"
-#include "zbuffer.h"
 
 void inicializa_death_star (Death_star* death_star, int posicao_x, int posicao_y) {
 	

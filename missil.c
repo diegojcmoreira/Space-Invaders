@@ -7,7 +7,6 @@
 
 #include "missil.h"
 #include "jogo.h"
-#include "zbuffer.h"
 
 
 void inicializa_missil( Missil* missil, int posicao_x, int y, SENTIDO sentido ) 

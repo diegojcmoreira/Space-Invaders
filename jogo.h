@@ -8,7 +8,6 @@
 #include "spaceship.h"
 #include "missil.h"
 #include "inimigo.h"
-#include "zbuffer.h"
 #include "define.h"
 #include "vidas.h"
 #include "death_star.h"
@@ -37,7 +36,6 @@ struct Jogo
   ALLEGRO_BITMAP* TELA_INICIAL;
   Missil missil[MAX_MISSEIS];
   Inimigo inimigo[COLUNAS_TROPA][LINHAS_TROPA];
-  ZBuffer zbuffer;
   bool saida;
   Death_star death_star;
   ALLEGRO_FONT* fonte;
