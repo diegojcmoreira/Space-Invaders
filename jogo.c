@@ -17,6 +17,7 @@ void inicializa_jogo( Jogo* jogo, int largura, int altura )
   jogo->altura = altura;
   jogo->largura = largura;
   jogo->misseis_ativos_spaceship = 0;
+  jogo->buffer = al_create_bitmap(largura,altura);
 
   jogo->N_MISSEIS = 0;
 
@@ -531,8 +532,9 @@ void desenha_fundo(Jogo* jogo)
 
 void tela_inicial (Jogo* jogo)
 {
-
-   al_draw_bitmap(jogo->TELA_INICIAL, 0, 0, 0);
+   al_draw_scaled_bitmap(jogo->TELA_INICIAL,
+   0, 0, al_get_bitmap_width(jogo->TELA_INICIAL), al_get_bitmap_height(jogo->TELA_INICIAL),
+   0, 0, DISPLAY_WIDTH, DISPLAY_HEIGHT, 0 );
 
     al_flip_display();
 
