@@ -19,7 +19,6 @@ void inicializa_jogo( Jogo* jogo, int largura, int altura )
   jogo->misseis_ativos_spaceship = 0;
 
   jogo->N_MISSEIS = 0;
-  //jogo->esquerda = true;
 
   
   inicializar_allegro();
