@@ -1,6 +1,3 @@
-// ZBuffer
-// Autor: GZS
-
 #ifndef ZBUFFER_H
 #define ZBUFFER_H
 
