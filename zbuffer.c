@@ -1,6 +1,3 @@
-// ZBuffer
-  // Autor: GZS
-
   #include <stdlib.h>
   #include <stdio.h>
   #include <allegro5/allegro.h>
