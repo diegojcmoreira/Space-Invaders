@@ -4,6 +4,7 @@
 #include "jogo.h"
 #include "bunker.h"
 
+
 void inicializa_bunker (Bunker* bunker, int posicao_x, int posicao_y) {
 
   bunker->bunker_inteiro = al_load_bitmap("imagens/bunker2.png");

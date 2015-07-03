@@ -14,7 +14,6 @@ struct Inimigo
 	int largura;
 	int altura;
 	bool vivo;
-	bool sentido;
 	DIRECAO direcao_atual;
 	ALLEGRO_BITMAP* IMAGEM;
 };
@@ -23,7 +22,7 @@ void inicializa_inimigo (Inimigo* inimigo, int posicao_x, int posicao_y);
 
 void inicializa_tropa (Inimigo inimigo[COLUNAS_TROPA][LINHAS_TROPA], int posicao_x, int posicao_y);
 
-void finaliza_inimigo (Inimigo* inimigo);
+void finaliza_inimigo ( Inimigo inimigo[COLUNAS_TROPA][LINHAS_TROPA]);
 
 void desenha_inimigo (Inimigo* inimigo);
 
@@ -45,7 +44,9 @@ void move_comboio (Inimigo inimigo[COLUNAS_TROPA][LINHAS_TROPA], DIRECAO direcao
 
 void inverte_direcao(Inimigo inimigo[COLUNAS_TROPA][LINHAS_TROPA], DIRECAO direcao);
 
-void atira_comboio (Inimigo inimigo[COLUNAS_TROPA][LINHAS_TROPA], Missil* projetil);
+void atira_comboio (Inimigo inimigo[COLUNAS_TROPA][LINHAS_TROPA], Missil* missil);
+
+bool inimigo_vivo(Inimigo inimigo[COLUNAS_TROPA][LINHAS_TROPA]);
 
 
 #endif

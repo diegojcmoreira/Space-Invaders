@@ -12,7 +12,6 @@ struct Bunker {
   int largura, altura;
   ALLEGRO_BITMAP* bunker_inteiro;
   ALLEGRO_BITMAP* bunker_fudido;  
-  //LegoBunker desenho[8][4];
   EstadoBunker pedaco[PEDACOS_LARGURA][PEDACOS_ALTURA];
 };
 

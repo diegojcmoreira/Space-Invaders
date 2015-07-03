@@ -22,8 +22,8 @@ void inicializa_inimigo (Inimigo* inimigo, int posicao_x, int posicao_y) {
 	inimigo->direcao_atual = ESQUERDA;
 	inimigo->vivo = true;
 	inicializa_bitmap_inimigo (inimigo);
-	inimigo->altura = DISPLAY_WIDTH/19;//al_get_bitmap_height(inimigo->IMAGEM);
-	inimigo->largura = DISPLAY_HEIGHT/10;//al_get_bitmap_width(inimigo->IMAGEM);
+	inimigo->altura = DISPLAY_WIDTH/19;
+	inimigo->largura = DISPLAY_HEIGHT/10;
 	inimigo->max_y = inimigo->posicao_y + (inimigo->altura);
 	inimigo->min_y = inimigo->posicao_y - (inimigo->altura);
 	inimigo->min_x = inimigo->posicao_x - (inimigo->largura); 
@@ -39,8 +39,10 @@ void inicializa_tropa (Inimigo inimigo[COLUNAS_TROPA][LINHAS_TROPA], int posicao
 
 }
 
-void finaliza_inimigo (Inimigo* inimigo) {
-	finaliza_bitmap_inimigo(inimigo);
+void finaliza_inimigo ( Inimigo inimigo[COLUNAS_TROPA][LINHAS_TROPA]) {
+	for (int i = 0; i < COLUNAS_TROPA; i++)
+		for (int j = 0; j < LINHAS_TROPA; j++)
+			finaliza_bitmap_inimigo(&inimigo[i][j]);
 }
 
 void desenha_inimigo (Inimigo* inimigo) 
@@ -50,10 +52,7 @@ al_draw_scaled_bitmap(inimigo->IMAGEM,
    0, 0, al_get_bitmap_width(inimigo->IMAGEM), al_get_bitmap_height(inimigo->IMAGEM),
    inimigo->posicao_x, inimigo->posicao_y, DISPLAY_WIDTH/19, DISPLAY_HEIGHT/9 , 0 );
 
-	/*al_draw_bitmap (inimigo->IMAGEM, 
-					inimigo->posicao_x, 
-					inimigo->posicao_y,
-					flags);*/
+	
 }
 
 void desenha_tropa (Inimigo inimigo[COLUNAS_TROPA][LINHAS_TROPA]) {
@@ -65,8 +64,7 @@ void desenha_tropa (Inimigo inimigo[COLUNAS_TROPA][LINHAS_TROPA]) {
 
 void inicializa_bitmap_inimigo (Inimigo* inimigo) 
 {
-	//puts("ENTROU NO inicializa_sprites_inimigo");
-	inimigo->IMAGEM = al_load_bitmap("imagens/DESTROYER2.jpg");
+	inimigo->IMAGEM = al_load_bitmap("imagens/DESTROYER3.png");
 
 	if (inimigo->IMAGEM == NULL) 
 	{
@@ -138,8 +136,8 @@ void automatizacao_inimigo( Inimigo inimigo[COLUNAS_TROPA][LINHAS_TROPA])
 		    move_comboio (inimigo, ESQUERDA);
 		    desenha_tropa(inimigo);
 	  	}
-	  	else{
-  		inverte_direcao(inimigo, DIREITA);}
+	  	else
+  		inverte_direcao(inimigo, DIREITA);
 	
 	if(inimigo[0][0].direcao_atual == DIREITA)
 	  	if (inimigo[COLUNAS_TROPA - 1][LINHAS_TROPA - 1].posicao_x < DISPLAY_WIDTH - inimigo[COLUNAS_TROPA - 1][LINHAS_TROPA - 1].largura)
@@ -147,11 +145,8 @@ void automatizacao_inimigo( Inimigo inimigo[COLUNAS_TROPA][LINHAS_TROPA])
 			move_comboio (inimigo, DIREITA);
 	    	desenha_tropa(inimigo); 
 	  	}
-	  	else{
-	  	printf("inimigo posicao_x = %d\ninimigo POSIÇÃO_y:%d\n", inimigo[9][1].posicao_x, inimigo[0][0].posicao_y );
-
-	  		inverte_direcao(inimigo, ESQUERDA);}
-  	//printf("15");
+	  	else
+	  		inverte_direcao(inimigo, ESQUERDA);
 
 }
 
@@ -171,21 +166,15 @@ void atira_comboio (Inimigo inimigo[COLUNAS_TROPA][LINHAS_TROPA], Missil* missil
     int quem_atira_x = rand() % COLUNAS_TROPA;
     int quem_atira_y = LINHAS_TROPA-1;
 
- 
-if(!(inimigo_vivo(inimigo)))
-{
-	puts("VENCEDOR");
-	return;
-}
-
-
-    while (!inimigo[quem_atira_x][0].vivo)
+    for (int i = 0; i < COLUNAS_TROPA; ++i)
+     if (!inimigo[quem_atira_x][0].vivo)
         quem_atira_x = (quem_atira_x+1) % COLUNAS_TROPA;
+
 
     while (!inimigo[quem_atira_x][quem_atira_y].vivo && quem_atira_y > 0)
         quem_atira_y--;
 
-    inicializa_missil_inimigo(missil, inimigo[quem_atira_x][quem_atira_y].posicao_x + inimigo[quem_atira_x][quem_atira_y].largura,
+    inicializa_missil_inimigo(missil, (inimigo[quem_atira_x][quem_atira_y].posicao_x + (inimigo[quem_atira_x][quem_atira_y].largura/2)) - missil->largura,
                                 inimigo[quem_atira_x][quem_atira_y].posicao_y + inimigo[0][0].altura, BAIXO); 
 }
 

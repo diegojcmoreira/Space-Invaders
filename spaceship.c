@@ -35,17 +35,12 @@ void desenha_spaceship( SPACESHIP* spaceship )
 {
   al_draw_scaled_bitmap(spaceship->bitmap,
    0, 0, al_get_bitmap_width(spaceship->bitmap), al_get_bitmap_height(spaceship->bitmap),
-   spaceship->posicao_x, spaceship->posicao_y, DISPLAY_WIDTH/19, DISPLAY_HEIGHT/8 , 0 );
-    
-  //al_draw_bitmap( spaceship->bitmap, 
-     // spaceship->posicao_x , 
-   //   spaceship->posicao_y , 0 );
-  
+   spaceship->posicao_x, spaceship->posicao_y, DISPLAY_WIDTH/19, DISPLAY_HEIGHT/8 , 0 );  
 }
 
 void inicializa_bitmap_spaceship(SPACESHIP* spaceship)
 {
-  spaceship->bitmap = al_load_bitmap("imagens/tanque.png");
+  spaceship->bitmap = al_load_bitmap("imagens/spaceship3.png");
 
   if( spaceship->bitmap == NULL) 
   {
@@ -57,11 +52,10 @@ void inicializa_bitmap_spaceship(SPACESHIP* spaceship)
 
 void move_spaceship( SPACESHIP* spaceship, int delta_x, int delta_y ) 
 {
-  //puts("ENTROU EM move_spaceship");
   spaceship->posicao_x += delta_x;
   spaceship->posicao_y += delta_y;  
   spaceship->min_x = spaceship->posicao_x + DELTA_X;
   spaceship->max_x = spaceship->posicao_x - DELTA_X;
   spaceship->min_y = spaceship->posicao_x + DELTA_Y;
-  //spaceship->min_y = spaceship->posicao_y;
+
 }

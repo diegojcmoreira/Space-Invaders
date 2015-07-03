@@ -11,6 +11,7 @@
 #include "zbuffer.h"
 #include "define.h"
 #include "vidas.h"
+#include "death_star.h"
 
 
 
@@ -24,10 +25,11 @@ struct Jogo
   Vidas vidas;
   Placar placar;
   int N_MISSEIS;
-  int N_DESTROYERS;
   int vida;
+  int misseis_ativos_spaceship;
+  int ativar_death_star;
   ALLEGRO_DISPLAY *display;
-  ALLEGRO_EVENT_QUEUE *fila_eventos;
+  ALLEGRO_EVENT_QUEUE *fila_eventos, *apos_perder;
   Bunker bunker[N_BUNKERS];
   SPACESHIP spaceship;
   ALLEGRO_BITMAP* JANELA;
@@ -37,9 +39,9 @@ struct Jogo
   Missil missil[MAX_MISSEIS];
   Inimigo inimigo[COLUNAS_TROPA][LINHAS_TROPA];
   ZBuffer zbuffer;
-  bool esquerda;
-  bool pause;
-  int tempo;
+  bool saida;
+  Death_star death_star;
+  ALLEGRO_FONT* fonte;
   
 };
 
@@ -57,9 +59,7 @@ void inicializa_timer_jogo (Jogo* jogo);
 
 void inicializa_eventos (Jogo* jogo);
 
-void colisao (Jogo* jogo );
-
-void colisao_missil_spaceship (Jogo* jogo, Bunker* bunker);
+void colisao_missil_bunker (Jogo* jogo, Bunker* bunker);
 
 void menu(Jogo* jogo);
 
@@ -87,9 +87,18 @@ void inicializar_tela_inicial(Jogo* jogo);
 
 void tela_inicial (Jogo* jogo);
 
-void colisao (Jogo* jogo, int teste);
+void colisao (Jogo* jogo, COLISAO colisao);
 
+void colisao_death_star(Jogo* jogo);
 
-//void atirar(Jogo* jogo, SENTIDO sentido);
+void perdeu_vida(Jogo* jogo);
+
+void fundo_pause (Jogo* jogo);
+
+void inicializar_fontes_menu_pause (Jogo* jogo);
+
+void perdendo_para_maquina(Jogo* jogo);
+
+void winner (Jogo* jogo);
 
 #endif
